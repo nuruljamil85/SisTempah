@@ -5,26 +5,197 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SisTempah — Sistem Tempahan Bilik Kelas Ganti</title>
 
-  <!-- Bootstrap 5 -->
+  <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <!-- Bootstrap Icons -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
-  <!-- FullCalendar -->
+  <!-- FullCalendar CSS -->
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* ===== GLOBAL ===== */
+    :root {
+      --primary: #1a3c6e;
+      --primary-light: #2563ae;
+      --accent: #16a34a;
+      --bg: #f0f4f8;
+      --surface: #ffffff;
+      --border: #dde3ea;
+      --text: #1f2328;
+      --muted: #57606a;
+    }
+    body {
+      font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    /* ===== HEADER ===== */
+    .navbar-sistempah {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      padding: 12px 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .navbar-sistempah .brand-title {
+      font-size: 1.25rem; font-weight: 700; color: #ffffff; letter-spacing: 0.5px;
+    }
+    .navbar-sistempah .brand-subtitle {
+      font-size: 0.75rem; color: rgba(255,255,255,0.75);
+    }
+    .navbar-sistempah .user-badge {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff; border-radius: 20px; padding: 4px 14px; font-size: 0.8rem;
+    }
+
+    /* ===== STAT CARDS ===== */
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 18px 20px;
+      display: flex; align-items: center; gap: 14px;
+      transition: box-shadow 0.2s;
+    }
+    .stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .stat-icon {
+      width: 46px; height: 46px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+    .stat-icon.green  { background: #dcfce7; color: #16a34a; }
+    .stat-icon.red    { background: #fee2e2; color: #dc2626; }
+    .stat-icon.yellow { background: #fef9c3; color: #ca8a04; }
+    .stat-icon.blue   { background: #dbeafe; color: #2563eb; }
+    .stat-value { font-size: 1.6rem; font-weight: 700; line-height: 1; }
+    .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+    /* ===== FILTER PANEL ===== */
+    .filter-panel {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 20px 24px;
+    }
+    .filter-panel .form-label {
+      font-weight: 600; font-size: 0.8rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    .btn-cari {
+      background: var(--primary); color: #fff; border: none;
+      padding: 10px 28px; border-radius: 8px;
+      font-weight: 600; font-size: 0.9rem; transition: background 0.2s; cursor: pointer;
+    }
+    .btn-cari:hover { background: var(--primary-light); color: #fff; }
+    .btn-reset {
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border); padding: 10px 20px;
+      border-radius: 8px; font-size: 0.9rem; transition: all 0.2s; cursor: pointer;
+    }
+    .btn-reset:hover { background: var(--bg); }
+
+    /* ===== BILIK CARDS ===== */
+    .bilik-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 18px;
+      transition: all 0.2s; position: relative; overflow: hidden; height: 100%;
+    }
+    .bilik-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.10); transform: translateY(-2px); }
+    .bilik-nama { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+    .bilik-blok { font-size: 0.78rem; color: var(--muted); }
+    .kemudahan-tag {
+      display: inline-block; background: #f0f4f8;
+      border: 1px solid #dde3ea; color: var(--muted);
+      border-radius: 12px; padding: 2px 10px; font-size: 0.72rem; margin: 2px;
+    }
+    .badge-status {
+      font-size: 0.75rem; padding: 4px 12px;
+      border-radius: 20px; font-weight: 600;
+    }
+    .badge-kosong     { background: #dcfce7; color: #15803d; }
+    .badge-ditempah   { background: #fee2e2; color: #b91c1c; }
+    .badge-pending    { background: #fef9c3; color: #92400e; }
+    .badge-diluluskan { background: #dbeafe; color: #1d4ed8; }
+
+    .btn-tempah {
+      background: var(--accent); color: #fff; border: none;
+      border-radius: 7px; padding: 7px 18px;
+      font-size: 0.85rem; font-weight: 600; width: 100%;
+      margin-top: 10px; transition: background 0.2s; cursor: pointer;
+    }
+    .btn-tempah:hover { background: #15803d; }
+    .btn-tempah:disabled { background: #9ca3af; cursor: not-allowed; }
+
+    /* ===== SECTION TITLES ===== */
+    .section-title {
+      font-size: 1rem; font-weight: 700; color: var(--primary);
+      border-left: 4px solid var(--primary-light);
+      padding-left: 12px; margin-bottom: 16px;
+    }
+
+    /* ===== CALENDAR ===== */
+    #kalender {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px;
+    }
+    .fc .fc-toolbar-title { font-size: 1rem; font-weight: 700; color: var(--primary); }
+    .fc .fc-button-primary { background: var(--primary) !important; border-color: var(--primary) !important; }
+    .fc .fc-button-primary:hover { background: var(--primary-light) !important; border-color: var(--primary-light) !important; }
+    .fc .fc-button-primary:not(:disabled).fc-button-active { background: var(--primary-light) !important; }
+    .fc-event { border-radius: 4px !important; font-size: 0.75rem !important; }
+
+    /* ===== JADUAL TEMPAHAN ===== */
+    .jadual-wrapper {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; overflow: hidden;
+    }
+    .jadual-wrapper table thead { background: var(--primary); color: #fff; }
+    .jadual-wrapper table thead th { font-weight: 600; font-size: 0.8rem; padding: 12px 14px; }
+    .jadual-wrapper table tbody td { padding: 11px 14px; vertical-align: middle; font-size: 0.85rem; }
+    .jadual-wrapper table tbody tr:hover { background: #f7f9fc; }
+
+    /* ===== MODAL ===== */
+    .modal-header { background: var(--primary); color: #fff; }
+    .modal-header .btn-close { filter: invert(1); }
+    .modal-title { font-weight: 700; }
+
+    /* ===== FOOTER ===== */
+    .footer-bar {
+      text-align: center; color: var(--muted);
+      font-size: 0.75rem; padding: 18px;
+      border-top: 1px solid var(--border); margin-top: 32px;
+    }
+
+    /* ===== ALERT ===== */
+    #alert-box {
+      position: fixed; top: 20px; right: 20px;
+      z-index: 9999; min-width: 300px; display: none;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .bilik-card { margin-bottom: 12px; }
+      .stat-card { padding: 14px; }
+      .stat-value { font-size: 1.3rem; }
+      .navbar-sistempah .brand-title { font-size: 1rem; }
+    }
+
+    /* ===== SVG ICONS ===== */
+    .ico { display:inline-block; vertical-align:-0.125em; width:1em; height:1em; fill:currentColor; }
+  </style>
 </head>
 <body>
 
 <!-- ===================== HEADER ===================== -->
 <nav class="navbar-sistempah d-flex align-items-center justify-content-between">
   <div>
-    <div class="brand-title"><i class="bi bi-building me-2"></i>SisTempah</div>
+    <div class="brand-title">
+      <svg class="ico me-1" viewBox="0 0 16 16"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h11A1.5 1.5 0 0 1 15 2.5v11a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 13.5v-11zm1.5-.5a.5.5 0 0 0-.5.5v11a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-11a.5.5 0 0 0-.5-.5h-11zm3.5 3a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm-3-4a.5.5 0 1 1 1 0 .5.5 0 0 1-1 0zm0 2a.5.5 0 1 1 1 0 .5.5 0 0 1-1 0zm0 2a.5.5 0 1 1 1 0 .5.5 0 0 1-1 0z"/></svg>
+      SisTempah
+    </div>
     <div class="brand-subtitle">Sistem Tempahan Bilik Kelas Ganti</div>
   </div>
   <div class="d-flex align-items-center gap-2">
     <span class="badge bg-light text-primary fw-semibold" style="font-size:0.75rem;">Semester Jun–Nov 2026</span>
-    <span class="user-badge"><i class="bi bi-person-circle me-1"></i>Pensyarah A</span>
+    <span class="user-badge">
+      <svg class="ico me-1" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.029 10 8 10c-2.029 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/></svg>
+      Pensyarah A
+    </span>
   </div>
 </nav>
 
@@ -33,7 +204,6 @@
 
   <!-- ALERT BOX -->
   <div id="alert-box" class="alert alert-success alert-dismissible fade show shadow" role="alert">
-    <i class="bi bi-check-circle-fill me-2"></i>
     <span id="alert-msg">Tempahan berjaya dihantar!</span>
     <button type="button" class="btn-close" onclick="document.getElementById('alert-box').style.display='none'"></button>
   </div>
@@ -42,7 +212,9 @@
   <div class="row g-3 mb-4">
     <div class="col-6 col-md-3">
       <div class="stat-card">
-        <div class="stat-icon green"><i class="bi bi-door-open"></i></div>
+        <div class="stat-icon green">
+          <svg viewBox="0 0 16 16" style="width:22px;height:22px;fill:currentColor"><path d="M1 1.5A1.5 1.5 0 0 1 2.5 0h7A1.5 1.5 0 0 1 11 1.5V4h.5A1.5 1.5 0 0 1 13 5.5v9a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V5.5A1.5 1.5 0 0 1 4 4H4V1.5A1.5 1.5 0 0 0 2.5-1zm2 13h8V5.5a.5.5 0 0 0-.5-.5H4.5a.5.5 0 0 0-.5.5V14.5zm1-13v2.5h6V1.5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0-.5.5zm3 4a.5.5 0 0 1 .5.5V12a.5.5 0 0 1-1 0V6.5a.5.5 0 0 1 .5-.5z"/></svg>
+        </div>
         <div>
           <div class="stat-value" id="stat-kosong">0</div>
           <div class="stat-label">Bilik Kosong</div>
@@ -51,7 +223,9 @@
     </div>
     <div class="col-6 col-md-3">
       <div class="stat-card">
-        <div class="stat-icon red"><i class="bi bi-door-closed"></i></div>
+        <div class="stat-icon red">
+          <svg viewBox="0 0 16 16" style="width:22px;height:22px;fill:currentColor"><path d="M1 1.5A1.5 1.5 0 0 1 2.5 0h7A1.5 1.5 0 0 1 11 1.5V4h.5A1.5 1.5 0 0 1 13 5.5v9a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V5.5A1.5 1.5 0 0 1 4 4H4V1.5A1.5 1.5 0 0 0 2.5-1zm2 13h8V5.5a.5.5 0 0 0-.5-.5H4.5a.5.5 0 0 0-.5.5V14.5zm1-13v2.5h6V1.5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0-.5.5z"/></svg>
+        </div>
         <div>
           <div class="stat-value" id="stat-ditempah">0</div>
           <div class="stat-label">Bilik Ditempah</div>
@@ -60,7 +234,9 @@
     </div>
     <div class="col-6 col-md-3">
       <div class="stat-card">
-        <div class="stat-icon yellow"><i class="bi bi-hourglass-split"></i></div>
+        <div class="stat-icon yellow">
+          <svg viewBox="0 0 16 16" style="width:22px;height:22px;fill:currentColor"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg>
+        </div>
         <div>
           <div class="stat-value" id="stat-pending">0</div>
           <div class="stat-label">Pending Kelulusan</div>
@@ -69,7 +245,9 @@
     </div>
     <div class="col-6 col-md-3">
       <div class="stat-card">
-        <div class="stat-icon blue"><i class="bi bi-calendar-check"></i></div>
+        <div class="stat-icon blue">
+          <svg viewBox="0 0 16 16" style="width:22px;height:22px;fill:currentColor"><path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></svg>
+        </div>
         <div>
           <div class="stat-value" id="stat-jumlah">0</div>
           <div class="stat-label">Jumlah Tempahan</div>
@@ -80,7 +258,10 @@
 
   <!-- ===== FILTER PANEL ===== -->
   <div class="filter-panel mb-4">
-    <div class="section-title mb-3"><i class="bi bi-funnel me-2"></i>Cari Bilik Available</div>
+    <div class="section-title mb-3">
+      <svg class="ico me-1" viewBox="0 0 16 16"><path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/></svg>
+      Cari Bilik Available
+    </div>
     <div class="row g-3 align-items-end">
       <div class="col-6 col-md-2">
         <label class="form-label">Tarikh</label>
@@ -115,44 +296,45 @@
         </select>
       </div>
       <div class="col-6 col-md-2 d-flex gap-2">
-        <button class="btn-cari w-100" onclick="filterBilik()"><i class="bi bi-search me-1"></i>Cari</button>
-        <button class="btn-reset" onclick="resetFilter()" title="Reset"><i class="bi bi-x-lg"></i></button>
+        <button class="btn-cari w-100" onclick="filterBilik()">
+          <svg class="ico me-1" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/></svg>
+          Cari
+        </button>
+        <button class="btn-reset" onclick="resetFilter()" title="Reset">&#10005;</button>
       </div>
     </div>
     <div id="filter-result-msg" class="mt-2 text-muted" style="font-size:0.8rem;"></div>
   </div>
 
   <!-- ===== KAD BILIK ===== -->
-  <div class="section-title"><i class="bi bi-grid-3x3-gap me-2"></i>Status Bilik</div>
-  <div class="row g-3 mb-4" id="senarai-bilik">
-    <!-- Dijana oleh JavaScript -->
+  <div class="section-title">
+    <svg class="ico me-1" viewBox="0 0 16 16"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z"/></svg>
+    Status Bilik
   </div>
+  <div class="row g-3 mb-4" id="senarai-bilik"></div>
 
   <!-- ===== CALENDAR ===== -->
-  <div class="section-title"><i class="bi bi-calendar-week me-2"></i>Jadual Tempahan Mingguan</div>
+  <div class="section-title">
+    <svg class="ico me-1" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></svg>
+    Jadual Tempahan Mingguan
+  </div>
   <div id="kalender" class="mb-4"></div>
 
-  <!-- ===== JADUAL TEMPAHAN SAYA ===== -->
-  <div class="section-title"><i class="bi bi-list-check me-2"></i>Senarai Semua Tempahan</div>
+  <!-- ===== JADUAL TEMPAHAN ===== -->
+  <div class="section-title">
+    <svg class="ico me-1" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/></svg>
+    Senarai Semua Tempahan
+  </div>
   <div class="jadual-wrapper mb-4">
     <div class="table-responsive">
-      <table class="table table-hover mb-0" id="jadual-tempahan">
+      <table class="table table-hover mb-0">
         <thead>
           <tr>
-            <th>#</th>
-            <th>Bilik</th>
-            <th>Pensyarah</th>
-            <th>Subjek</th>
-            <th>Kumpulan</th>
-            <th>Tarikh</th>
-            <th>Masa</th>
-            <th>Status</th>
-            <th>Tindakan</th>
+            <th>#</th><th>Bilik</th><th>Pensyarah</th><th>Subjek</th>
+            <th>Kumpulan</th><th>Tarikh</th><th>Masa</th><th>Status</th><th>Tindakan</th>
           </tr>
         </thead>
-        <tbody id="tbody-tempahan">
-          <!-- Dijana oleh JavaScript -->
-        </tbody>
+        <tbody id="tbody-tempahan"></tbody>
       </table>
     </div>
   </div>
@@ -165,12 +347,12 @@
 </div>
 
 <!-- ===================== MODAL TEMPAHAN ===================== -->
-<div class="modal fade" id="modalTempah" tabindex="-1" aria-labelledby="modalTempahLabel" aria-hidden="true">
+<div class="modal fade" id="modalTempah" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalTempahLabel"><i class="bi bi-calendar-plus me-2"></i>Borang Tempahan Bilik</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        <h5 class="modal-title">Borang Tempahan Bilik</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
         <form id="form-tempah" novalidate>
@@ -194,13 +376,11 @@
             <label class="form-label fw-semibold">Kumpulan Pelajar</label>
             <input type="text" id="modal-kumpulan" class="form-control" placeholder="cth: 3EE1" required />
           </div>
-          <div class="row g-2">
-            <div class="col-12">
-              <label class="form-label fw-semibold">Tarikh</label>
-              <input type="date" id="modal-tarikh" class="form-control" required />
-            </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Tarikh</label>
+            <input type="date" id="modal-tarikh" class="form-control" required />
           </div>
-          <div class="row g-2 mt-1">
+          <div class="row g-2">
             <div class="col-6">
               <label class="form-label fw-semibold">Masa Mula</label>
               <input type="time" id="modal-mula" class="form-control" required />
@@ -215,9 +395,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
-        <button type="button" class="btn btn-success fw-semibold" onclick="simpanTempahan()">
-          <i class="bi bi-send me-1"></i>Hantar Permohonan
-        </button>
+        <button type="button" class="btn btn-success fw-semibold" onclick="simpanTempahan()">Hantar Permohonan</button>
       </div>
     </div>
   </div>
@@ -228,7 +406,7 @@
   <div class="modal-dialog modal-dialog-centered modal-sm">
     <div class="modal-content">
       <div class="modal-header" style="background:#dc2626;">
-        <h6 class="modal-title text-white fw-bold"><i class="bi bi-trash me-2"></i>Batal Tempahan</h6>
+        <h6 class="modal-title text-white fw-bold">Batal Tempahan</h6>
         <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter:invert(1)"></button>
       </div>
       <div class="modal-body">
@@ -246,6 +424,318 @@
 <!-- ===================== SCRIPTS ===================== -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-<script src="app.js"></script>
+<script>
+// ============================================================
+//  SisTempah — Logik Aplikasi (Embedded)
+// ============================================================
+
+// ── DATA TERUS DALAM KOD (tiada fetch, tiada isu path) ──────
+let appData = {
+  bilik: [
+    { id:'B001', nama:'E14', blok:'Blok E', kapasiti:35, kemudahan:['Projektor','AC','WiFi'],        status:'kosong'   },
+    { id:'B002', nama:'E15', blok:'Blok E', kapasiti:40, kemudahan:['Projektor','AC','Papan Putih'], status:'ditempah' },
+    { id:'B003', nama:'E16', blok:'Blok E', kapasiti:25, kemudahan:['AC','WiFi'],                    status:'pending'  }
+  ],
+  pensyarah: [
+    { id:'P001', nama:'Pensyarah A', jabatan:'Kejuruteraan'   },
+    { id:'P002', nama:'Pensyarah B', jabatan:'Sains'          },
+    { id:'P003', nama:'Pensyarah C', jabatan:'Sains Komputer' }
+  ],
+  tempahan: [
+    { id:'T001', bilik_id:'B002', nama_bilik:'E15', pensyarah:'Pensyarah A', subjek:'Matematik Kejuruteraan', kumpulan:'3EE1', tarikh:'2026-07-06', masa_mula:'09:00', masa_tamat:'11:00', status:'diluluskan' },
+    { id:'T002', bilik_id:'B003', nama_bilik:'E16', pensyarah:'Pensyarah B', subjek:'Fizik Gunaan',           kumpulan:'2SC2', tarikh:'2026-07-07', masa_mula:'14:00', masa_tamat:'16:00', status:'pending'    },
+    { id:'T003', bilik_id:'B002', nama_bilik:'E15', pensyarah:'Pensyarah C', subjek:'Pengaturcaraan Web',     kumpulan:'3CS3', tarikh:'2026-07-08', masa_mula:'10:00', masa_tamat:'12:00', status:'diluluskan' },
+    { id:'T004', bilik_id:'B001', nama_bilik:'E14', pensyarah:'Pensyarah A', subjek:'Statistik Gunaan',       kumpulan:'2EE2', tarikh:'2026-07-09', masa_mula:'08:00', masa_tamat:'10:00', status:'diluluskan' },
+    { id:'T005', bilik_id:'B003', nama_bilik:'E16', pensyarah:'Pensyarah C', subjek:'Rangkaian Komputer',     kumpulan:'3CS1', tarikh:'2026-07-10', masa_mula:'13:00', masa_tamat:'15:00', status:'pending'    }
+  ]
+};
+
+let kalender = null;
+
+// ── INIT ────────────────────────────────────────────────────
+function init() {
+  renderStatWidgets();
+  renderKadBilik(appData.bilik);
+  renderJadualTempahan(appData.tempahan);
+  initKalender();
+  populateModalDropdowns();
+  document.getElementById('filter-tarikh').value = hariIni();
+}
+
+// ── STAT WIDGETS ─────────────────────────────────────────────
+function renderStatWidgets() {
+  document.getElementById('stat-kosong').textContent   = appData.bilik.filter(b => b.status === 'kosong').length;
+  document.getElementById('stat-ditempah').textContent = appData.bilik.filter(b => b.status === 'ditempah').length;
+  document.getElementById('stat-pending').textContent  = appData.tempahan.filter(t => t.status === 'pending').length;
+  document.getElementById('stat-jumlah').textContent   = appData.tempahan.length;
+}
+
+// ── KAD BILIK ────────────────────────────────────────────────
+function renderKadBilik(senarai) {
+  const container = document.getElementById('senarai-bilik');
+  if (senarai.length === 0) {
+    container.innerHTML = `<div class="col-12"><div class="alert alert-warning">Tiada bilik yang memenuhi carian anda. Cuba ubah kriteria carian.</div></div>`;
+    return;
+  }
+  container.innerHTML = senarai.map(b => {
+    const badge = badgeStatus(b.status);
+    const boleh = b.status === 'kosong';
+    const kemHTML = b.kemudahan.map(k => `<span class="kemudahan-tag">&#10003; ${k}</span>`).join('');
+    return `
+    <div class="col-12 col-md-4">
+      <div class="bilik-card">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <div>
+            <div class="bilik-nama">${b.nama}</div>
+            <div class="bilik-blok">${b.blok}</div>
+          </div>
+          <span class="badge-status ${badge.cls}">${badge.label}</span>
+        </div>
+        <div class="mb-2" style="font-size:0.85rem;">
+          Kapasiti: <strong>${b.kapasiti} pelajar</strong>
+        </div>
+        <div class="mb-3">${kemHTML}</div>
+        <button class="btn-tempah" ${boleh ? `onclick="bukModal('${b.id}')"` : 'disabled'}>
+          ${boleh ? 'Tempah Bilik' : badge.label}
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── FILTER ───────────────────────────────────────────────────
+function filterBilik() {
+  const tarikh    = document.getElementById('filter-tarikh').value;
+  const mula      = document.getElementById('filter-mula').value;
+  const tamat     = document.getElementById('filter-tamat').value;
+  const kapasiti  = parseInt(document.getElementById('filter-kapasiti').value) || 0;
+  const kemudahan = document.getElementById('filter-kemudahan').value;
+
+  const hasil = appData.bilik.filter(b => {
+    if (b.kapasiti < kapasiti) return false;
+    if (kemudahan && !b.kemudahan.includes(kemudahan)) return false;
+    if (tarikh && mula && tamat) {
+      const konflik = appData.tempahan.some(t =>
+        t.bilik_id === b.id && t.tarikh === tarikh && t.status !== 'dibatal' &&
+        !(tamat <= t.masa_mula || mula >= t.masa_tamat)
+      );
+      if (konflik) return false;
+    }
+    return true;
+  });
+
+  renderKadBilik(hasil);
+  const msg = document.getElementById('filter-result-msg');
+  msg.textContent = (tarikh || mula || kapasiti || kemudahan)
+    ? `${hasil.length} bilik ditemui berdasarkan carian anda.` : '';
+}
+
+function resetFilter() {
+  document.getElementById('filter-tarikh').value    = hariIni();
+  document.getElementById('filter-mula').value      = '';
+  document.getElementById('filter-tamat').value     = '';
+  document.getElementById('filter-kapasiti').value  = '0';
+  document.getElementById('filter-kemudahan').value = '';
+  document.getElementById('filter-result-msg').textContent = '';
+  renderKadBilik(appData.bilik);
+}
+
+// ── JADUAL TEMPAHAN ──────────────────────────────────────────
+function renderJadualTempahan(senarai) {
+  const tbody = document.getElementById('tbody-tempahan');
+  if (senarai.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="9" class="text-center text-muted py-4">Tiada rekod tempahan.</td></tr>`;
+    return;
+  }
+  const sorted = [...senarai].sort((a, b) => a.tarikh.localeCompare(b.tarikh));
+  tbody.innerHTML = sorted.map((t, i) => {
+    const badge = badgeStatus(t.status);
+    const bolehBatal = t.status !== 'dibatal' && t.status !== 'diluluskan';
+    return `
+    <tr>
+      <td class="text-muted">${i + 1}</td>
+      <td><strong>${t.nama_bilik}</strong></td>
+      <td>${t.pensyarah}</td>
+      <td>${t.subjek}</td>
+      <td>${t.kumpulan}</td>
+      <td>${formatTarikh(t.tarikh)}</td>
+      <td>${t.masa_mula} &ndash; ${t.masa_tamat}</td>
+      <td><span class="badge-status ${badge.cls}">${badge.label}</span></td>
+      <td>${bolehBatal
+        ? `<button class="btn btn-sm btn-outline-danger" onclick="konfirmBatal('${t.id}')">Batal</button>`
+        : `<span class="text-muted">&mdash;</span>`}
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ── FULLCALENDAR ─────────────────────────────────────────────
+function initKalender() {
+  const el = document.getElementById('kalender');
+  const events = appData.tempahan
+    .filter(t => t.status !== 'dibatal')
+    .map(t => ({
+      id: t.id,
+      title: `${t.nama_bilik} \u2014 ${t.pensyarah}`,
+      start: `${t.tarikh}T${t.masa_mula}`,
+      end:   `${t.tarikh}T${t.masa_tamat}`,
+      color: warnaCal(t.status),
+      extendedProps: t
+    }));
+
+  kalender = new FullCalendar.Calendar(el, {
+    initialView: 'timeGridWeek',
+    locale: 'ms',
+    initialDate: '2026-07-06',
+    headerToolbar: { left:'prev,next today', center:'title', right:'dayGridMonth,timeGridWeek,timeGridDay' },
+    slotMinTime: '07:00:00',
+    slotMaxTime: '20:00:00',
+    allDaySlot: false,
+    height: 520,
+    events: events,
+    eventClick(info) {
+      const t = info.event.extendedProps;
+      alert('Butiran Tempahan\n\nBilik: ' + t.nama_bilik + '\nPensyarah: ' + t.pensyarah +
+        '\nSubjek: ' + t.subjek + '\nKumpulan: ' + t.kumpulan +
+        '\nTarikh: ' + formatTarikh(t.tarikh) + '\nMasa: ' + t.masa_mula + ' - ' + t.masa_tamat +
+        '\nStatus: ' + t.status.toUpperCase());
+    },
+    dateClick(info) { bukModal(null, info.dateStr); },
+    eventContent(arg) {
+      return { html: '<div style="padding:2px 4px;overflow:hidden;"><div style="font-weight:600;">' +
+        arg.event.extendedProps.nama_bilik + '</div><div style="font-size:0.7rem;opacity:0.9;">' +
+        arg.event.extendedProps.pensyarah + '</div></div>' };
+    }
+  });
+  kalender.render();
+}
+
+function kemaskiniKalender() {
+  if (!kalender) return;
+  kalender.getEvents().forEach(e => e.remove());
+  appData.tempahan.filter(t => t.status !== 'dibatal').forEach(t => {
+    kalender.addEvent({
+      id: t.id,
+      title: `${t.nama_bilik} \u2014 ${t.pensyarah}`,
+      start: `${t.tarikh}T${t.masa_mula}`,
+      end:   `${t.tarikh}T${t.masa_tamat}`,
+      color: warnaCal(t.status),
+      extendedProps: t
+    });
+  });
+}
+
+// ── MODAL TEMPAHAN ───────────────────────────────────────────
+function populateModalDropdowns() {
+  document.getElementById('modal-bilik').innerHTML =
+    '<option value="">-- Pilih Bilik --</option>' +
+    appData.bilik.map(b => `<option value="${b.id}">${b.nama} (Kapasiti: ${b.kapasiti})</option>`).join('');
+
+  document.getElementById('modal-pensyarah').innerHTML =
+    '<option value="">-- Pilih Pensyarah --</option>' +
+    appData.pensyarah.map(p => `<option value="${p.nama}">${p.nama} \u2014 ${p.jabatan}</option>`).join('');
+}
+
+function bukModal(bilikId, tarikhStr) {
+  document.getElementById('form-tempah').reset();
+  document.getElementById('modal-error').classList.add('d-none');
+  if (bilikId) document.getElementById('modal-bilik').value = bilikId;
+  if (tarikhStr) {
+    document.getElementById('modal-tarikh').value = tarikhStr.substring(0, 10);
+    if (tarikhStr.length > 10) document.getElementById('modal-mula').value = tarikhStr.substring(11, 16);
+  } else {
+    document.getElementById('modal-tarikh').value = document.getElementById('filter-tarikh').value || hariIni();
+    document.getElementById('modal-mula').value   = document.getElementById('filter-mula').value || '';
+    document.getElementById('modal-tamat').value  = document.getElementById('filter-tamat').value || '';
+  }
+  new bootstrap.Modal(document.getElementById('modalTempah')).show();
+}
+
+// ── SIMPAN TEMPAHAN ──────────────────────────────────────────
+function simpanTempahan() {
+  const bilikId   = document.getElementById('modal-bilik').value;
+  const pensyarah = document.getElementById('modal-pensyarah').value;
+  const subjek    = document.getElementById('modal-subjek').value.trim();
+  const kumpulan  = document.getElementById('modal-kumpulan').value.trim();
+  const tarikh    = document.getElementById('modal-tarikh').value;
+  const mula      = document.getElementById('modal-mula').value;
+  const tamat     = document.getElementById('modal-tamat').value;
+  const errBox    = document.getElementById('modal-error');
+
+  if (!bilikId || !pensyarah || !subjek || !kumpulan || !tarikh || !mula || !tamat) {
+    errBox.textContent = 'Sila lengkapkan semua medan.';
+    errBox.classList.remove('d-none'); return;
+  }
+  if (mula >= tamat) {
+    errBox.textContent = 'Masa tamat mesti lebih lewat daripada masa mula.';
+    errBox.classList.remove('d-none'); return;
+  }
+  if (appData.tempahan.some(t =>
+    t.bilik_id === bilikId && t.tarikh === tarikh && t.status !== 'dibatal' &&
+    !(tamat <= t.masa_mula || mula >= t.masa_tamat))) {
+    errBox.textContent = 'Bilik ini sudah ditempah pada masa tersebut. Sila pilih masa atau bilik lain.';
+    errBox.classList.remove('d-none'); return;
+  }
+
+  errBox.classList.add('d-none');
+  const bilik = appData.bilik.find(b => b.id === bilikId);
+  appData.tempahan.push({
+    id: 'T' + String(Date.now()).slice(-6),
+    bilik_id: bilikId, nama_bilik: bilik.nama,
+    pensyarah, subjek, kumpulan, tarikh,
+    masa_mula: mula, masa_tamat: tamat, status: 'pending'
+  });
+
+  bootstrap.Modal.getInstance(document.getElementById('modalTempah')).hide();
+  renderStatWidgets();
+  renderKadBilik(appData.bilik);
+  renderJadualTempahan(appData.tempahan);
+  kemaskiniKalender();
+  tunjukAlert('Permohonan tempahan berjaya dihantar! Status: PENDING KELULUSAN.', 'success');
+}
+
+// ── BATAL TEMPAHAN ───────────────────────────────────────────
+function konfirmBatal(id) {
+  document.getElementById('batal-id').value = id;
+  new bootstrap.Modal(document.getElementById('modalBatal')).show();
+}
+
+function batalTempahan() {
+  const id  = document.getElementById('batal-id').value;
+  const idx = appData.tempahan.findIndex(t => t.id === id);
+  if (idx !== -1) appData.tempahan[idx].status = 'dibatal';
+  bootstrap.Modal.getInstance(document.getElementById('modalBatal')).hide();
+  renderStatWidgets();
+  renderKadBilik(appData.bilik);
+  renderJadualTempahan(appData.tempahan);
+  kemaskiniKalender();
+  tunjukAlert('Tempahan telah dibatalkan.', 'warning');
+}
+
+// ── UTILITIES ────────────────────────────────────────────────
+function badgeStatus(status) {
+  return { kosong:{cls:'badge-kosong',label:'Kosong'}, ditempah:{cls:'badge-ditempah',label:'Ditempah'},
+    pending:{cls:'badge-pending',label:'Pending'}, diluluskan:{cls:'badge-diluluskan',label:'Diluluskan'},
+    dibatal:{cls:'badge-ditempah',label:'Dibatal'} }[status] || { cls:'', label:status };
+}
+function warnaCal(status) {
+  return { diluluskan:'#2563eb', pending:'#ca8a04', dibatal:'#9ca3af' }[status] || '#6b7280';
+}
+function hariIni() { return new Date().toISOString().split('T')[0]; }
+function formatTarikh(str) {
+  if (!str) return '';
+  const [y,m,d] = str.split('-'); return `${d}/${m}/${y}`;
+}
+function tunjukAlert(msg, jenis) {
+  const box = document.getElementById('alert-box');
+  box.className = `alert alert-${jenis} alert-dismissible fade show shadow`;
+  document.getElementById('alert-msg').textContent = msg;
+  box.style.display = 'block';
+  setTimeout(() => { box.style.display = 'none'; }, 4000);
+}
+
+// ── MULAKAN ──────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', init);
+</script>
 </body>
 </html>
