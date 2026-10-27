@@ -4,184 +4,84 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SisTempah — Sistem Tempahan Bilik Kelas Ganti</title>
-
-  <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <!-- FullCalendar CSS -->
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
-
   <style>
-    /* ===== GLOBAL ===== */
     :root {
-      --primary: #1a3c6e;
-      --primary-light: #2563ae;
-      --accent: #16a34a;
-      --bg: #f0f4f8;
-      --surface: #ffffff;
-      --border: #dde3ea;
+      --primary: #1d4ed8;
+      --primary-light: #2563eb;
+      --bg: #f7f8fa;
+      --border: #e5e7eb;
       --text: #1f2328;
       --muted: #57606a;
     }
-    body {
-      font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      font-size: 14px;
-    }
-
-    /* ===== HEADER ===== */
-    .navbar-sistempah {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      padding: 12px 24px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-    .navbar-sistempah .brand-title {
-      font-size: 1.25rem; font-weight: 700; color: #ffffff; letter-spacing: 0.5px;
-    }
-    .navbar-sistempah .brand-subtitle {
-      font-size: 0.75rem; color: rgba(255,255,255,0.75);
-    }
-    .navbar-sistempah .user-badge {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.3);
-      color: #fff; border-radius: 20px; padding: 4px 14px; font-size: 0.8rem;
-    }
-
-    /* ===== STAT CARDS ===== */
-    .stat-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 10px; padding: 18px 20px;
-      display: flex; align-items: center; gap: 14px;
-      transition: box-shadow 0.2s;
-    }
-    .stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-    .stat-icon {
-      width: 46px; height: 46px; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.3rem; flex-shrink: 0;
-    }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system,"Segoe UI",system-ui,sans-serif; font-size: 14px; line-height: 1.6; }
+    .navbar-sistempah { background: var(--primary); color: #fff; padding: 10px 20px; }
+    .brand-title { font-size: 1.15rem; font-weight: 700; }
+    .brand-subtitle { font-size: 0.72rem; opacity: .8; }
+    .user-badge { background: rgba(255,255,255,.15); border-radius: 20px; padding: 4px 12px; font-size: 0.78rem; }
+    .stat-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 18px; display: flex; align-items: center; gap: 14px; transition: box-shadow .15s; }
+    .stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+    .stat-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .stat-icon.green  { background: #dcfce7; color: #16a34a; }
     .stat-icon.red    { background: #fee2e2; color: #dc2626; }
     .stat-icon.yellow { background: #fef9c3; color: #ca8a04; }
     .stat-icon.blue   { background: #dbeafe; color: #2563eb; }
     .stat-value { font-size: 1.6rem; font-weight: 700; line-height: 1; }
     .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
-
-    /* ===== FILTER PANEL ===== */
-    .filter-panel {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 10px; padding: 20px 24px;
-    }
-    .filter-panel .form-label {
-      font-weight: 600; font-size: 0.8rem; color: var(--muted);
-      text-transform: uppercase; letter-spacing: 0.4px;
-    }
-    .btn-cari {
-      background: var(--primary); color: #fff; border: none;
-      padding: 10px 28px; border-radius: 8px;
-      font-weight: 600; font-size: 0.9rem; transition: background 0.2s; cursor: pointer;
-    }
-    .btn-cari:hover { background: var(--primary-light); color: #fff; }
-    .btn-reset {
-      background: transparent; color: var(--muted);
-      border: 1px solid var(--border); padding: 10px 20px;
-      border-radius: 8px; font-size: 0.9rem; transition: all 0.2s; cursor: pointer;
-    }
+    .filter-panel { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+    .filter-panel .form-label { font-size: 0.78rem; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+    .btn-cari { background: var(--primary); color: #fff; border: none; border-radius: 6px; padding: 6px 16px; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: background .15s; }
+    .btn-cari:hover { background: var(--primary-light); }
+    .btn-reset { background: #fff; color: var(--muted); border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 0.82rem; cursor: pointer; }
     .btn-reset:hover { background: var(--bg); }
-
-    /* ===== BILIK CARDS ===== */
-    .bilik-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 10px; padding: 18px;
-      transition: all 0.2s; position: relative; overflow: hidden; height: 100%;
-    }
-    .bilik-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.10); transform: translateY(-2px); }
+    .bilik-card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 20px; transition: box-shadow .15s, transform .15s; height: 100%; }
+    .bilik-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.10); transform: translateY(-2px); }
     .bilik-nama { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
     .bilik-blok { font-size: 0.78rem; color: var(--muted); }
-    .kemudahan-tag {
-      display: inline-block; background: #f0f4f8;
-      border: 1px solid #dde3ea; color: var(--muted);
-      border-radius: 12px; padding: 2px 10px; font-size: 0.72rem; margin: 2px;
-    }
-    .badge-status {
-      font-size: 0.75rem; padding: 4px 12px;
-      border-radius: 20px; font-weight: 600;
-    }
+    .kemudahan-tag { display: inline-block; background: #f1f5f9; color: #475569; border-radius: 4px; padding: 2px 7px; font-size: 0.72rem; margin: 2px 2px 0 0; }
+    .badge-status { display: inline-block; border-radius: 5px; padding: 3px 10px; font-size: 0.75rem; font-weight: 600; }
     .badge-kosong     { background: #dcfce7; color: #15803d; }
     .badge-ditempah   { background: #fee2e2; color: #b91c1c; }
     .badge-pending    { background: #fef9c3; color: #92400e; }
     .badge-diluluskan { background: #dbeafe; color: #1d4ed8; }
-
-    .btn-tempah {
-      background: var(--accent); color: #fff; border: none;
-      border-radius: 7px; padding: 7px 18px;
-      font-size: 0.85rem; font-weight: 600; width: 100%;
-      margin-top: 10px; transition: background 0.2s; cursor: pointer;
-    }
+    .badge-ditolak    { background: #f1f5f9; color: #64748b; }
+    .badge-dibatal    { background: #f1f5f9; color: #64748b; }
+    .btn-tempah { background: #16a34a; color: #fff; border: none; border-radius: 6px; padding: 7px 16px; font-size: 0.82rem; font-weight: 600; cursor: pointer; width: 100%; margin-top: 12px; transition: background .15s; }
     .btn-tempah:hover { background: #15803d; }
     .btn-tempah:disabled { background: #9ca3af; cursor: not-allowed; }
-
-    /* ===== SECTION TITLES ===== */
-    .section-title {
-      font-size: 1rem; font-weight: 700; color: var(--primary);
-      border-left: 4px solid var(--primary-light);
-      padding-left: 12px; margin-bottom: 16px;
-    }
-
-    /* ===== CALENDAR ===== */
-    #kalender {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 10px; padding: 16px;
-    }
+    .section-title { font-size: 0.92rem; font-weight: 700; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; border-left: 3px solid var(--primary); padding-left: 10px; }
+    #kalender { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
     .fc .fc-toolbar-title { font-size: 1rem; font-weight: 700; color: var(--primary); }
     .fc .fc-button-primary { background: var(--primary) !important; border-color: var(--primary) !important; }
     .fc .fc-button-primary:hover { background: var(--primary-light) !important; border-color: var(--primary-light) !important; }
     .fc .fc-button-primary:not(:disabled).fc-button-active { background: var(--primary-light) !important; }
     .fc-event { border-radius: 4px !important; font-size: 0.75rem !important; }
-
-    /* ===== JADUAL TEMPAHAN ===== */
-    .jadual-wrapper {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 10px; overflow: hidden;
-    }
+    .jadual-wrapper { background: #fff; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
     .jadual-wrapper table thead { background: var(--primary); color: #fff; }
-    .jadual-wrapper table thead th { font-weight: 600; font-size: 0.8rem; padding: 12px 14px; }
-    .jadual-wrapper table tbody td { padding: 11px 14px; vertical-align: middle; font-size: 0.85rem; }
+    .jadual-wrapper table thead th { font-weight: 600; font-size: 0.8rem; padding: 11px 13px; }
+    .jadual-wrapper table tbody td { padding: 10px 13px; vertical-align: middle; font-size: 0.84rem; }
     .jadual-wrapper table tbody tr:hover { background: #f7f9fc; }
-
-    /* ===== MODAL ===== */
     .modal-header { background: var(--primary); color: #fff; }
     .modal-header .btn-close { filter: invert(1); }
     .modal-title { font-weight: 700; }
-
-    /* ===== FOOTER ===== */
-    .footer-bar {
-      text-align: center; color: var(--muted);
-      font-size: 0.75rem; padding: 18px;
-      border-top: 1px solid var(--border); margin-top: 32px;
-    }
-
-    /* ===== ALERT ===== */
-    #alert-box {
-      position: fixed; top: 20px; right: 20px;
-      z-index: 9999; min-width: 300px; display: none;
-    }
-
-    /* ===== RESPONSIVE ===== */
+    .footer-bar { text-align: center; padding: 14px; font-size: 0.75rem; color: var(--muted); border-top: 1px solid var(--border); margin-top: 24px; background: #fff; }
+    #alert-box { display: none; position: fixed; top: 70px; right: 20px; z-index: 9999; min-width: 280px; max-width: 380px; }
+    .nav-tabs .nav-link { color: var(--muted); font-weight: 600; font-size: 0.85rem; }
+    .nav-tabs .nav-link.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .tab-admin-locked { pointer-events: none; opacity: 0.4; }
+    .ico { display:inline-block; vertical-align:-0.125em; width:1em; height:1em; fill:currentColor; }
     @media (max-width: 768px) {
       .bilik-card { margin-bottom: 12px; }
       .stat-card { padding: 14px; }
       .stat-value { font-size: 1.3rem; }
-      .navbar-sistempah .brand-title { font-size: 1rem; }
+      .brand-title { font-size: 1rem; }
     }
-
-    /* ===== SVG ICONS ===== */
-    .ico { display:inline-block; vertical-align:-0.125em; width:1em; height:1em; fill:currentColor; }
   </style>
 </head>
 <body>
 
-<!-- ===================== HEADER ===================== -->
+<!-- NAVBAR -->
 <nav class="navbar-sistempah d-flex align-items-center justify-content-between">
   <div>
     <div class="brand-title">
@@ -191,167 +91,175 @@
     <div class="brand-subtitle">Sistem Tempahan Bilik Kelas Ganti</div>
   </div>
   <div class="d-flex align-items-center gap-2">
-    <span class="badge bg-light text-primary fw-semibold" style="font-size:0.75rem;">Semester Jun–Nov 2026</span>
-    <span class="user-badge">
-      <svg class="ico me-1" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.029 10 8 10c-2.029 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/></svg>
-      Pensyarah A
-    </span>
+    <span class="badge bg-light text-primary fw-semibold" style="font-size:0.72rem;">Semester Jun–Nov 2026</span>
+    <button id="btn-admin-toggle" class="btn btn-sm btn-outline-light fw-semibold" onclick="toggleLoginModal()">
+      &#128274; Log Masuk Admin
+    </button>
   </div>
 </nav>
 
-<!-- ===================== MAIN CONTAINER ===================== -->
+<!-- MAIN -->
 <div class="container-fluid px-3 px-md-4 py-4">
 
-  <!-- ALERT BOX -->
-  <div id="alert-box" class="alert alert-success alert-dismissible fade show shadow" role="alert">
-    <span id="alert-msg">Tempahan berjaya dihantar!</span>
+  <!-- ALERT -->
+  <div id="alert-box" class="alert alert-dismissible fade show shadow" role="alert">
+    <span id="alert-msg"></span>
     <button type="button" class="btn-close" onclick="document.getElementById('alert-box').style.display='none'"></button>
   </div>
 
-  <!-- ===== STAT WIDGETS ===== -->
-  <div class="row g-3 mb-4">
-    <div class="col-6 col-md-3">
-      <div class="stat-card">
-        <div class="stat-icon green">
-          <svg viewBox="0 0 16 16" style="width:22px;height:22px;fill:currentColor"><path d="M1 1.5A1.5 1.5 0 0 1 2.5 0h7A1.5 1.5 0 0 1 11 1.5V4h.5A1.5 1.5 0 0 1 13 5.5v9a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V5.5A1.5 1.5 0 0 1 4 4H4V1.5A1.5 1.5 0 0 0 2.5-1zm2 13h8V5.5a.5.5 0 0 0-.5-.5H4.5a.5.5 0 0 0-.5.5V14.5zm1-13v2.5h6V1.5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0-.5.5zm3 4a.5.5 0 0 1 .5.5V12a.5.5 0 0 1-1 0V6.5a.5.5 0 0 1 .5-.5z"/></svg>
-        </div>
-        <div>
-          <div class="stat-value" id="stat-kosong">0</div>
-          <div class="stat-label">Bilik Kosong</div>
-        </div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="stat-card">
-        <div class="stat-icon red">
-          <svg viewBox="0 0 16 16" style="width:22px;height:22px;fill:currentColor"><path d="M1 1.5A1.5 1.5 0 0 1 2.5 0h7A1.5 1.5 0 0 1 11 1.5V4h.5A1.5 1.5 0 0 1 13 5.5v9a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V5.5A1.5 1.5 0 0 1 4 4H4V1.5A1.5 1.5 0 0 0 2.5-1zm2 13h8V5.5a.5.5 0 0 0-.5-.5H4.5a.5.5 0 0 0-.5.5V14.5zm1-13v2.5h6V1.5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0-.5.5z"/></svg>
-        </div>
-        <div>
-          <div class="stat-value" id="stat-ditempah">0</div>
-          <div class="stat-label">Bilik Ditempah</div>
-        </div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="stat-card">
-        <div class="stat-icon yellow">
-          <svg viewBox="0 0 16 16" style="width:22px;height:22px;fill:currentColor"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg>
-        </div>
-        <div>
-          <div class="stat-value" id="stat-pending">0</div>
-          <div class="stat-label">Pending Kelulusan</div>
-        </div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="stat-card">
-        <div class="stat-icon blue">
-          <svg viewBox="0 0 16 16" style="width:22px;height:22px;fill:currentColor"><path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></svg>
-        </div>
-        <div>
-          <div class="stat-value" id="stat-jumlah">0</div>
-          <div class="stat-label">Jumlah Tempahan</div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- TABS -->
+  <ul class="nav nav-tabs mb-4" id="mainTabs" role="tablist">
+    <li class="nav-item">
+      <button class="nav-link active" id="tab-pensyarah-btn" data-bs-toggle="tab" data-bs-target="#tab-pensyarah" type="button">
+        &#128203; Paparan Pensyarah
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link tab-admin-locked" id="tab-admin-btn" data-bs-toggle="tab" data-bs-target="#tab-admin" type="button">
+        &#128274; Panel Admin
+      </button>
+    </li>
+  </ul>
 
-  <!-- ===== FILTER PANEL ===== -->
-  <div class="filter-panel mb-4">
-    <div class="section-title mb-3">
-      <svg class="ico me-1" viewBox="0 0 16 16"><path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/></svg>
-      Cari Bilik Available
-    </div>
-    <div class="row g-3 align-items-end">
-      <div class="col-6 col-md-2">
-        <label class="form-label">Tarikh</label>
-        <input type="date" id="filter-tarikh" class="form-control form-control-sm" />
-      </div>
-      <div class="col-6 col-md-2">
-        <label class="form-label">Masa Mula</label>
-        <input type="time" id="filter-mula" class="form-control form-control-sm" />
-      </div>
-      <div class="col-6 col-md-2">
-        <label class="form-label">Masa Tamat</label>
-        <input type="time" id="filter-tamat" class="form-control form-control-sm" />
-      </div>
-      <div class="col-6 col-md-2">
-        <label class="form-label">Min. Kapasiti</label>
-        <select id="filter-kapasiti" class="form-select form-select-sm">
-          <option value="0">Semua Kapasiti</option>
-          <option value="10">10+</option>
-          <option value="20">20+</option>
-          <option value="30">30+</option>
-          <option value="40">40+</option>
-        </select>
-      </div>
-      <div class="col-6 col-md-2">
-        <label class="form-label">Kemudahan</label>
-        <select id="filter-kemudahan" class="form-select form-select-sm">
-          <option value="">Semua</option>
-          <option value="Projektor">Projektor</option>
-          <option value="AC">AC</option>
-          <option value="WiFi">WiFi</option>
-          <option value="Papan Putih">Papan Putih</option>
-        </select>
-      </div>
-      <div class="col-6 col-md-2 d-flex gap-2">
-        <button class="btn-cari w-100" onclick="filterBilik()">
-          <svg class="ico me-1" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/></svg>
-          Cari
-        </button>
-        <button class="btn-reset" onclick="resetFilter()" title="Reset">&#10005;</button>
-      </div>
-    </div>
-    <div id="filter-result-msg" class="mt-2 text-muted" style="font-size:0.8rem;"></div>
-  </div>
+  <div class="tab-content">
 
-  <!-- ===== KAD BILIK ===== -->
-  <div class="section-title">
-    <svg class="ico me-1" viewBox="0 0 16 16"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z"/></svg>
-    Status Bilik
-  </div>
-  <div class="row g-3 mb-4" id="senarai-bilik"></div>
+    <!-- ===== TAB PENSYARAH ===== -->
+    <div class="tab-pane fade show active" id="tab-pensyarah" role="tabpanel">
 
-  <!-- ===== CALENDAR ===== -->
-  <div class="section-title">
-    <svg class="ico me-1" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></svg>
-    Jadual Tempahan Mingguan
-  </div>
-  <div id="kalender" class="mb-4"></div>
+      <!-- STAT -->
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <svg viewBox="0 0 16 16" style="width:22px;height:22px;fill:currentColor"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg>
+            </div>
+            <div><div class="stat-value" id="stat-kosong">0</div><div class="stat-label">Bilik Kosong</div></div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon red">
+              <svg viewBox="0 0 16 16" style="width:22px;height:22px;fill:currentColor"><path d="M1 1.5A1.5 1.5 0 0 1 2.5 0h7A1.5 1.5 0 0 1 11 1.5V4h.5A1.5 1.5 0 0 1 13 5.5v9a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V5.5A1.5 1.5 0 0 1 4 4h.5V1.5A1.5 1.5 0 0 0 2.5 0z"/></svg>
+            </div>
+            <div><div class="stat-value" id="stat-ditempah">0</div><div class="stat-label">Bilik Ditempah</div></div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon yellow">
+              <svg viewBox="0 0 16 16" style="width:22px;height:22px;fill:currentColor"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg>
+            </div>
+            <div><div class="stat-value" id="stat-pending">0</div><div class="stat-label">Pending Kelulusan</div></div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon blue">
+              <svg viewBox="0 0 16 16" style="width:22px;height:22px;fill:currentColor"><path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></svg>
+            </div>
+            <div><div class="stat-value" id="stat-jumlah">0</div><div class="stat-label">Jumlah Tempahan</div></div>
+          </div>
+        </div>
+      </div>
 
-  <!-- ===== JADUAL TEMPAHAN ===== -->
-  <div class="section-title">
-    <svg class="ico me-1" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/></svg>
-    Senarai Semua Tempahan
-  </div>
-  <div class="jadual-wrapper mb-4">
-    <div class="table-responsive">
-      <table class="table table-hover mb-0">
-        <thead>
-          <tr>
-            <th>#</th><th>Bilik</th><th>Pensyarah</th><th>Subjek</th>
-            <th>Kumpulan</th><th>Tarikh</th><th>Masa</th><th>Status</th><th>Tindakan</th>
-          </tr>
-        </thead>
-        <tbody id="tbody-tempahan"></tbody>
-      </table>
-    </div>
-  </div>
+      <!-- FILTER -->
+      <div class="filter-panel mb-4">
+        <div class="section-title mb-3">
+          <svg class="ico" viewBox="0 0 16 16"><path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/></svg>
+          Semak Ketersediaan Bilik
+        </div>
+        <div class="row g-3 align-items-end">
+          <div class="col-6 col-md-3">
+            <label class="form-label">Tarikh</label>
+            <input type="date" id="filter-tarikh" class="form-control form-control-sm" min="2026-06-01" max="2026-11-30" />
+          </div>
+          <div class="col-6 col-md-2">
+            <label class="form-label">Masa Mula</label>
+            <select id="filter-mula" class="form-select form-select-sm"></select>
+          </div>
+          <div class="col-6 col-md-2">
+            <label class="form-label">Masa Tamat</label>
+            <select id="filter-tamat" class="form-select form-select-sm"></select>
+          </div>
+          <div class="col-6 col-md-3 d-flex gap-2 align-items-end">
+            <button class="btn-cari w-100" onclick="filterBilik()">
+              <svg class="ico me-1" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/></svg>
+              Semak
+            </button>
+            <button class="btn-reset" onclick="resetFilter()" title="Reset">&#10005;</button>
+          </div>
+        </div>
+        <div id="filter-result-msg" class="mt-2 text-muted" style="font-size:0.8rem;"></div>
+      </div>
 
-</div><!-- /container -->
+      <!-- KAD BILIK -->
+      <div class="section-title">
+        <svg class="ico" viewBox="0 0 16 16"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z"/></svg>
+        Status Bilik
+      </div>
+      <div class="row g-3 mb-4" id="senarai-bilik"></div>
 
-<!-- ===================== FOOTER ===================== -->
-<div class="footer-bar">
-  SisTempah &copy; 2026 — Sistem Tempahan Bilik Kelas Ganti &nbsp;|&nbsp; Made with IBM Bob
+      <!-- KALENDAR -->
+      <div class="section-title">
+        <svg class="ico" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></svg>
+        Kalendar Tempahan
+      </div>
+      <div id="kalender" class="mb-4"></div>
+
+      <!-- REKOD TEMPAHAN -->
+      <div class="section-title">
+        <svg class="ico" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 8.5a.5.5 0 1 1 1 0 .5.5 0 0 1-1 0zm0-4a.5.5 0 1 1 1 0 .5.5 0 0 1-1 0zm0-4a.5.5 0 1 1 1 0 .5.5 0 0 1-1 0z"/></svg>
+        Rekod Tempahan Saya
+      </div>
+      <div class="jadual-wrapper mb-4">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr><th>#</th><th>Bilik</th><th>Pensyarah</th><th>Subjek</th><th>Kumpulan</th><th>Tarikh</th><th>Masa</th><th>Status</th></tr>
+            </thead>
+            <tbody id="tbody-tempahan"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /tab-pensyarah -->
+
+    <!-- ===== TAB ADMIN ===== -->
+    <div class="tab-pane fade" id="tab-admin" role="tabpanel">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="section-title mb-0">
+          &#9881;&#65039; Panel Admin &mdash; Pengurusan Tempahan
+        </div>
+        <span class="badge bg-danger" id="badge-pending-count" style="font-size:0.8rem;"></span>
+      </div>
+      <div class="jadual-wrapper mb-4">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr><th>#</th><th>Bilik</th><th>Pensyarah</th><th>Subjek</th><th>Kumpulan</th><th>Tarikh</th><th>Masa</th><th>Status</th><th>Tindakan</th></tr>
+            </thead>
+            <tbody id="tbody-admin"></tbody>
+          </table>
+        </div>
+      </div>
+    </div><!-- /tab-admin -->
+
+  </div><!-- /tab-content -->
 </div>
 
-<!-- ===================== MODAL TEMPAHAN ===================== -->
+<!-- FOOTER -->
+<div class="footer-bar">
+  &copy; 2026 SisTempah &mdash; Sistem Tempahan Bilik Kelas Ganti &bull; Semester Jun–Nov 2026 &nbsp;|&nbsp; Made with IBM Bob
+</div>
+
+<!-- =================== MODALS =================== -->
+
+<!-- Modal: Borang Tempahan -->
 <div class="modal fade" id="modalTempah" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Borang Tempahan Bilik</h5>
+        <h5 class="modal-title">&#128197; Borang Tempahan Bilik</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
@@ -363,9 +271,12 @@
             </select>
           </div>
           <div class="mb-3">
-            <label class="form-label fw-semibold">Pensyarah</label>
+            <label class="form-label fw-semibold">Nama Pensyarah</label>
             <select id="modal-pensyarah" class="form-select" required>
               <option value="">-- Pilih Pensyarah --</option>
+              <option value="Nur Izzati">Nur Izzati</option>
+              <option value="Nur Sakinah">Nur Sakinah</option>
+              <option value="Muhammad Fateh">Muhammad Fateh</option>
             </select>
           </div>
           <div class="mb-3">
@@ -378,280 +289,350 @@
           </div>
           <div class="mb-3">
             <label class="form-label fw-semibold">Tarikh</label>
-            <input type="date" id="modal-tarikh" class="form-control" required />
+            <input type="date" id="modal-tarikh" class="form-control" required min="2026-06-01" max="2026-11-30" />
           </div>
           <div class="row g-2">
             <div class="col-6">
               <label class="form-label fw-semibold">Masa Mula</label>
-              <input type="time" id="modal-mula" class="form-control" required />
+              <select id="modal-mula" class="form-select" required></select>
             </div>
             <div class="col-6">
               <label class="form-label fw-semibold">Masa Tamat</label>
-              <input type="time" id="modal-tamat" class="form-control" required />
+              <select id="modal-tamat" class="form-select" required></select>
             </div>
           </div>
-          <div id="modal-error" class="alert alert-danger mt-3 d-none" role="alert"></div>
+          <div id="modal-error" class="alert alert-danger mt-3 d-none py-2" style="font-size:0.82rem;"></div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
-        <button type="button" class="btn btn-success fw-semibold" onclick="simpanTempahan()">Hantar Permohonan</button>
+        <button type="button" class="btn btn-success fw-semibold" onclick="simpanTempahan()">&#128228; Hantar Permohonan</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ===================== MODAL BATAL ===================== -->
-<div class="modal fade" id="modalBatal" tabindex="-1" aria-hidden="true">
+<!-- Modal: Login Admin -->
+<div class="modal fade" id="modalLogin" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">&#128274; Log Masuk Admin</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Nama Pengguna</label>
+          <input type="text" id="login-user" class="form-control" placeholder="admin" autocomplete="off" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Kata Laluan</label>
+          <input type="password" id="login-pass" class="form-control"
+            onkeydown="if(event.key==='Enter') doLogin()" />
+        </div>
+        <div id="login-error" class="alert alert-danger d-none py-2" style="font-size:0.82rem;">
+          Nama pengguna atau kata laluan salah.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+        <button class="btn btn-primary btn-sm fw-semibold" onclick="doLogin()">Log Masuk</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Konfirm Batal Admin -->
+<div class="modal fade" id="modalKonfirmBatal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-sm">
     <div class="modal-content">
       <div class="modal-header" style="background:#dc2626;">
-        <h6 class="modal-title text-white fw-bold">Batal Tempahan</h6>
+        <h6 class="modal-title text-white fw-bold">&#9888; Batalkan Tempahan</h6>
         <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter:invert(1)"></button>
       </div>
       <div class="modal-body">
-        <p class="mb-0">Adakah anda pasti ingin membatalkan tempahan ini?</p>
-        <input type="hidden" id="batal-id" />
+        <p class="mb-1" id="konfirm-batal-msg" style="font-size:0.85rem;"></p>
+        <p class="mb-0 text-danger" style="font-size:0.8rem;">Tindakan ini akan membebaskan bilik semula.</p>
+        <input type="hidden" id="konfirm-batal-id" />
       </div>
       <div class="modal-footer">
         <button class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Tidak</button>
-        <button class="btn btn-sm btn-danger fw-semibold" onclick="batalTempahan()">Ya, Batal</button>
+        <button class="btn btn-sm btn-danger fw-semibold" onclick="laksanakanBatal()">Ya, Batalkan</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ===================== SCRIPTS ===================== -->
+<!-- =================== SCRIPTS =================== -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 <script>
-// ============================================================
-//  SisTempah — Logik Aplikasi (Embedded)
-// ============================================================
+'use strict';
 
-// ── DATA TERUS DALAM KOD (tiada fetch, tiada isu path) ──────
-let appData = {
-  bilik: [
-    { id:'B001', nama:'E14', blok:'Blok E', kapasiti:35, kemudahan:['Projektor','AC','WiFi'],        status:'kosong'   },
-    { id:'B002', nama:'E15', blok:'Blok E', kapasiti:40, kemudahan:['Projektor','AC','Papan Putih'], status:'ditempah' },
-    { id:'B003', nama:'E16', blok:'Blok E', kapasiti:25, kemudahan:['AC','WiFi'],                    status:'pending'  }
-  ],
-  pensyarah: [
-    { id:'P001', nama:'Pensyarah A', jabatan:'Kejuruteraan'   },
-    { id:'P002', nama:'Pensyarah B', jabatan:'Sains'          },
-    { id:'P003', nama:'Pensyarah C', jabatan:'Sains Komputer' }
-  ],
-  tempahan: [
-    { id:'T001', bilik_id:'B002', nama_bilik:'E15', pensyarah:'Pensyarah A', subjek:'Matematik Kejuruteraan', kumpulan:'3EE1', tarikh:'2026-07-06', masa_mula:'09:00', masa_tamat:'11:00', status:'diluluskan' },
-    { id:'T002', bilik_id:'B003', nama_bilik:'E16', pensyarah:'Pensyarah B', subjek:'Fizik Gunaan',           kumpulan:'2SC2', tarikh:'2026-07-07', masa_mula:'14:00', masa_tamat:'16:00', status:'pending'    },
-    { id:'T003', bilik_id:'B002', nama_bilik:'E15', pensyarah:'Pensyarah C', subjek:'Pengaturcaraan Web',     kumpulan:'3CS3', tarikh:'2026-07-08', masa_mula:'10:00', masa_tamat:'12:00', status:'diluluskan' },
-    { id:'T004', bilik_id:'B001', nama_bilik:'E14', pensyarah:'Pensyarah A', subjek:'Statistik Gunaan',       kumpulan:'2EE2', tarikh:'2026-07-09', masa_mula:'08:00', masa_tamat:'10:00', status:'diluluskan' },
-    { id:'T005', bilik_id:'B003', nama_bilik:'E16', pensyarah:'Pensyarah C', subjek:'Rangkaian Komputer',     kumpulan:'3CS1', tarikh:'2026-07-10', masa_mula:'13:00', masa_tamat:'15:00', status:'pending'    }
-  ]
-};
+// ══════════════════════ DATA TETAP ══════════════════════
+const BILIK_DATA = [
+  { id:'E14', nama:'E14', blok:'Blok E', kapasiti:40, kemudahan:['Projektor','AC','WiFi','Papan Putih'] },
+  { id:'E15', nama:'E15', blok:'Blok E', kapasiti:35, kemudahan:['Projektor','AC','WiFi'] },
+  { id:'E16', nama:'E16', blok:'Blok E', kapasiti:30, kemudahan:['AC','WiFi','Papan Putih'] }
+];
 
-let kalender = null;
+const BILIK_WARNA = { E14:'#2563eb', E15:'#7c3aed', E16:'#0891b2' };
+const CREDS = { user:'admin', pass:'sistempah2026' };
+const LS_KEY = 'sistempah_v3';
 
-// ── INIT ────────────────────────────────────────────────────
-function init() {
-  renderStatWidgets();
-  renderKadBilik(appData.bilik);
-  renderJadualTempahan(appData.tempahan);
-  initKalender();
-  populateModalDropdowns();
-  document.getElementById('filter-tarikh').value = hariIni();
+// ══════════════════════ STATE ══════════════════════
+let appData       = { tempahan: [] };
+let adminLoggedIn = false;
+let kalender      = null;
+
+// ══════════════════════ MASA (5 MINIT) ══════════════════════
+function janaMasaPilihan() {
+  const opts = [];
+  for (let h = 7; h <= 20; h++) {
+    for (let m = 0; m < 60; m += 5) {
+      if (h === 20 && m > 0) break;
+      opts.push(String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0'));
+    }
+  }
+  return opts;
+}
+const MASA = janaMasaPilihan();
+
+function isiMasa(elId, termasukBlank) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.innerHTML = termasukBlank ? '<option value="">-- Pilih --</option>' : '';
+  MASA.forEach(m => {
+    const o = document.createElement('option');
+    o.value = m; o.textContent = m;
+    el.appendChild(o);
+  });
 }
 
-// ── STAT WIDGETS ─────────────────────────────────────────────
-function renderStatWidgets() {
-  document.getElementById('stat-kosong').textContent   = appData.bilik.filter(b => b.status === 'kosong').length;
-  document.getElementById('stat-ditempah').textContent = appData.bilik.filter(b => b.status === 'ditempah').length;
+// ══════════════════════ LOCALSTORAGE ══════════════════════
+function simpanLS() {
+  localStorage.setItem(LS_KEY, JSON.stringify(appData.tempahan));
+}
+function muatLS() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) appData.tempahan = JSON.parse(raw);
+  } catch(e) { appData.tempahan = []; }
+}
+
+// ══════════════════════ STATUS BILIK (DINAMIK) ══════════════════════
+// Kira status berdasarkan slot tarikh+masa.
+// Jika tiada tarikh/masa, semak global (semua tarikh).
+function statusBilik(bilikId, tarikh, mula, tamat) {
+  const aktif = appData.tempahan.filter(t => {
+    if (t.bilik !== bilikId) return false;
+    if (t.status !== 'diluluskan' && t.status !== 'pending') return false;
+    if (tarikh && mula && tamat) {
+      // Hanya konflik jika tarikh sama DAN masa bertindih
+      return t.tarikh === tarikh && t.mula < tamat && t.tamat > mula;
+    }
+    return true; // Semak global
+  });
+  if (aktif.some(t => t.status === 'diluluskan')) return 'ditempah';
+  if (aktif.some(t => t.status === 'pending'))    return 'pending';
+  return 'kosong';
+}
+
+// ══════════════════════ STAT WIDGETS ══════════════════════
+function renderStat() {
+  // Stat global (tanpa filter masa)
+  document.getElementById('stat-kosong').textContent   = BILIK_DATA.filter(b => statusBilik(b.id) === 'kosong').length;
+  document.getElementById('stat-ditempah').textContent = BILIK_DATA.filter(b => statusBilik(b.id) === 'ditempah').length;
   document.getElementById('stat-pending').textContent  = appData.tempahan.filter(t => t.status === 'pending').length;
   document.getElementById('stat-jumlah').textContent   = appData.tempahan.length;
+  // Badge pending di tab admin
+  const pd = appData.tempahan.filter(t => t.status === 'pending').length;
+  const badge = document.getElementById('badge-pending-count');
+  badge.textContent = pd > 0 ? pd + ' Pending' : '';
+  badge.style.display = pd > 0 ? '' : 'none';
 }
 
-// ── KAD BILIK ────────────────────────────────────────────────
-function renderKadBilik(senarai) {
+// ══════════════════════ KAD BILIK ══════════════════════
+function renderKadBilik(tarikh, mula, tamat) {
   const container = document.getElementById('senarai-bilik');
-  if (senarai.length === 0) {
-    container.innerHTML = `<div class="col-12"><div class="alert alert-warning">Tiada bilik yang memenuhi carian anda. Cuba ubah kriteria carian.</div></div>`;
-    return;
-  }
-  container.innerHTML = senarai.map(b => {
-    const badge = badgeStatus(b.status);
-    const boleh = b.status === 'kosong';
-    const kemHTML = b.kemudahan.map(k => `<span class="kemudahan-tag">&#10003; ${k}</span>`).join('');
+  container.innerHTML = BILIK_DATA.map(b => {
+    const st      = statusBilik(b.id, tarikh, mula, tamat);
+    const cls     = { kosong:'badge-kosong', pending:'badge-pending', ditempah:'badge-ditempah' }[st];
+    const label   = { kosong:'Kosong', pending:'Pending Kelulusan', ditempah:'Ditempah' }[st];
+    const disabled = st === 'ditempah' ? 'disabled' : '';
+    const kemHTML = b.kemudahan.map(k => `<span class="kemudahan-tag">${k}</span>`).join('');
+    const btnLabel = st === 'ditempah' ? '&#128275; Bilik Ditempah' : '&#128197; Tempah Bilik';
     return `
     <div class="col-12 col-md-4">
       <div class="bilik-card">
         <div class="d-flex justify-content-between align-items-start mb-2">
           <div>
-            <div class="bilik-nama">${b.nama}</div>
-            <div class="bilik-blok">${b.blok}</div>
+            <div class="bilik-nama" style="color:${BILIK_WARNA[b.id] || 'var(--primary)'}">Bilik ${b.nama}</div>
+            <div class="bilik-blok">${b.blok} &bull; Kapasiti: ${b.kapasiti} pelajar</div>
           </div>
-          <span class="badge-status ${badge.cls}">${badge.label}</span>
-        </div>
-        <div class="mb-2" style="font-size:0.85rem;">
-          Kapasiti: <strong>${b.kapasiti} pelajar</strong>
+          <span class="badge-status ${cls}">${label}</span>
         </div>
         <div class="mb-3">${kemHTML}</div>
-        <button class="btn-tempah" ${boleh ? `onclick="bukModal('${b.id}')"` : 'disabled'}>
-          ${boleh ? 'Tempah Bilik' : badge.label}
+        <button class="btn-tempah" ${disabled} onclick="bukModal('${b.id}','${tarikh||''}','${mula||''}','${tamat||''}')">
+          ${btnLabel}
         </button>
       </div>
     </div>`;
   }).join('');
 }
 
-// ── FILTER ───────────────────────────────────────────────────
+// ══════════════════════ FILTER ══════════════════════
 function filterBilik() {
-  const tarikh    = document.getElementById('filter-tarikh').value;
-  const mula      = document.getElementById('filter-mula').value;
-  const tamat     = document.getElementById('filter-tamat').value;
-  const kapasiti  = parseInt(document.getElementById('filter-kapasiti').value) || 0;
-  const kemudahan = document.getElementById('filter-kemudahan').value;
+  const tarikh = document.getElementById('filter-tarikh').value;
+  const mula   = document.getElementById('filter-mula').value;
+  const tamat  = document.getElementById('filter-tamat').value;
+  const msg    = document.getElementById('filter-result-msg');
 
-  const hasil = appData.bilik.filter(b => {
-    if (b.kapasiti < kapasiti) return false;
-    if (kemudahan && !b.kemudahan.includes(kemudahan)) return false;
-    if (tarikh && mula && tamat) {
-      const konflik = appData.tempahan.some(t =>
-        t.bilik_id === b.id && t.tarikh === tarikh && t.status !== 'dibatal' &&
-        !(tamat <= t.masa_mula || mula >= t.masa_tamat)
-      );
-      if (konflik) return false;
-    }
-    return true;
-  });
+  if (tarikh && (tarikh < '2026-06-01' || tarikh > '2026-11-30')) {
+    msg.innerHTML = '<span class="text-danger">Had tarikh: 1 Jun 2026 – 30 Nov 2026</span>';
+    return;
+  }
+  if (tarikh && mula && tamat && mula >= tamat) {
+    msg.innerHTML = '<span class="text-danger">Masa tamat mesti selepas masa mula.</span>';
+    return;
+  }
 
-  renderKadBilik(hasil);
-  const msg = document.getElementById('filter-result-msg');
-  msg.textContent = (tarikh || mula || kapasiti || kemudahan)
-    ? `${hasil.length} bilik ditemui berdasarkan carian anda.` : '';
+  renderKadBilik(tarikh, mula, tamat);
+
+  if (tarikh && mula && tamat) {
+    const tersedia = BILIK_DATA.filter(b => statusBilik(b.id, tarikh, mula, tamat) === 'kosong').length;
+    msg.innerHTML = `<strong>${tersedia}</strong> bilik tersedia pada <strong>${formatTarikh(tarikh)}</strong>, ${mula} &ndash; ${tamat}`;
+  } else if (tarikh) {
+    msg.textContent = 'Pilih masa mula dan masa tamat untuk semak ketersediaan.';
+  } else {
+    msg.textContent = '';
+  }
 }
 
 function resetFilter() {
-  document.getElementById('filter-tarikh').value    = hariIni();
-  document.getElementById('filter-mula').value      = '';
-  document.getElementById('filter-tamat').value     = '';
-  document.getElementById('filter-kapasiti').value  = '0';
-  document.getElementById('filter-kemudahan').value = '';
+  document.getElementById('filter-tarikh').value = '';
+  document.getElementById('filter-mula').value   = MASA[0];
+  document.getElementById('filter-tamat').value  = MASA[0];
   document.getElementById('filter-result-msg').textContent = '';
-  renderKadBilik(appData.bilik);
+  renderKadBilik();
 }
 
-// ── JADUAL TEMPAHAN ──────────────────────────────────────────
-function renderJadualTempahan(senarai) {
+// ══════════════════════ JADUAL PENSYARAH ══════════════════════
+function renderJadualTempahan() {
   const tbody = document.getElementById('tbody-tempahan');
-  if (senarai.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="9" class="text-center text-muted py-4">Tiada rekod tempahan.</td></tr>`;
+  const senarai = [...appData.tempahan].sort((a,b) => a.tarikh.localeCompare(b.tarikh));
+  if (!senarai.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-3">Tiada rekod tempahan.</td></tr>';
     return;
   }
-  const sorted = [...senarai].sort((a, b) => a.tarikh.localeCompare(b.tarikh));
-  tbody.innerHTML = sorted.map((t, i) => {
-    const badge = badgeStatus(t.status);
-    const bolehBatal = t.status !== 'dibatal' && t.status !== 'diluluskan';
-    return `
-    <tr>
-      <td class="text-muted">${i + 1}</td>
-      <td><strong>${t.nama_bilik}</strong></td>
+  tbody.innerHTML = senarai.map((t, i) => {
+    const { cls, label } = badgeMeta(t.status);
+    return `<tr>
+      <td class="text-muted">${i+1}</td>
+      <td><strong style="color:${BILIK_WARNA[t.bilik]||'inherit'}">${t.bilik}</strong></td>
       <td>${t.pensyarah}</td>
       <td>${t.subjek}</td>
       <td>${t.kumpulan}</td>
       <td>${formatTarikh(t.tarikh)}</td>
-      <td>${t.masa_mula} &ndash; ${t.masa_tamat}</td>
-      <td><span class="badge-status ${badge.cls}">${badge.label}</span></td>
-      <td>${bolehBatal
-        ? `<button class="btn btn-sm btn-outline-danger" onclick="konfirmBatal('${t.id}')">Batal</button>`
-        : `<span class="text-muted">&mdash;</span>`}
-      </td>
+      <td>${t.mula}&ndash;${t.tamat}</td>
+      <td><span class="badge-status ${cls}">${label}</span></td>
     </tr>`;
   }).join('');
 }
 
-// ── FULLCALENDAR ─────────────────────────────────────────────
-function initKalender() {
-  const el = document.getElementById('kalender');
-  const events = appData.tempahan
-    .filter(t => t.status !== 'dibatal')
-    .map(t => ({
-      id: t.id,
-      title: `${t.nama_bilik} \u2014 ${t.pensyarah}`,
-      start: `${t.tarikh}T${t.masa_mula}`,
-      end:   `${t.tarikh}T${t.masa_tamat}`,
-      color: warnaCal(t.status),
-      extendedProps: t
-    }));
-
-  kalender = new FullCalendar.Calendar(el, {
-    initialView: 'timeGridWeek',
-    locale: 'ms',
-    initialDate: '2026-07-06',
-    headerToolbar: { left:'prev,next today', center:'title', right:'dayGridMonth,timeGridWeek,timeGridDay' },
-    slotMinTime: '07:00:00',
-    slotMaxTime: '20:00:00',
-    allDaySlot: false,
-    height: 520,
-    events: events,
-    eventClick(info) {
-      const t = info.event.extendedProps;
-      alert('Butiran Tempahan\n\nBilik: ' + t.nama_bilik + '\nPensyarah: ' + t.pensyarah +
-        '\nSubjek: ' + t.subjek + '\nKumpulan: ' + t.kumpulan +
-        '\nTarikh: ' + formatTarikh(t.tarikh) + '\nMasa: ' + t.masa_mula + ' - ' + t.masa_tamat +
-        '\nStatus: ' + t.status.toUpperCase());
-    },
-    dateClick(info) { bukModal(null, info.dateStr); },
-    eventContent(arg) {
-      return { html: '<div style="padding:2px 4px;overflow:hidden;"><div style="font-weight:600;">' +
-        arg.event.extendedProps.nama_bilik + '</div><div style="font-size:0.7rem;opacity:0.9;">' +
-        arg.event.extendedProps.pensyarah + '</div></div>' };
+// ══════════════════════ JADUAL ADMIN ══════════════════════
+function renderJadualAdmin() {
+  const tbody = document.getElementById('tbody-admin');
+  const senarai = [...appData.tempahan].sort((a,b) => {
+    // Pending dahulu, kemudian ikut tarikh
+    const ord = { pending:0, diluluskan:1, ditolak:2, dibatal:3 };
+    return (ord[a.status]||9) - (ord[b.status]||9) || a.tarikh.localeCompare(b.tarikh);
+  });
+  if (!senarai.length) {
+    tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-3">Tiada rekod tempahan.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = senarai.map((t, i) => {
+    const { cls, label } = badgeMeta(t.status);
+    let aksi = '<span class="text-muted">&#8212;</span>';
+    if (t.status === 'pending') {
+      aksi = `
+        <button class="btn btn-sm btn-success fw-semibold me-1" onclick="adminLulus('${t.id}')">&#10003; Lulus</button>
+        <button class="btn btn-sm btn-danger fw-semibold" onclick="adminTolak('${t.id}')">&#10007; Tolak</button>`;
+    } else if (t.status === 'diluluskan') {
+      aksi = `<button class="btn btn-sm btn-outline-danger fw-semibold" onclick="adminKonfirmBatal('${t.id}')">&#10007; Batalkan</button>`;
     }
-  });
-  kalender.render();
+    return `<tr>
+      <td class="text-muted">${i+1}</td>
+      <td><strong style="color:${BILIK_WARNA[t.bilik]||'inherit'}">${t.bilik}</strong></td>
+      <td>${t.pensyarah}</td>
+      <td>${t.subjek}</td>
+      <td>${t.kumpulan}</td>
+      <td>${formatTarikh(t.tarikh)}</td>
+      <td>${t.mula}&ndash;${t.tamat}</td>
+      <td><span class="badge-status ${cls}">${label}</span></td>
+      <td>${aksi}</td>
+    </tr>`;
+  }).join('');
 }
 
-function kemaskiniKalender() {
-  if (!kalender) return;
-  kalender.getEvents().forEach(e => e.remove());
-  appData.tempahan.filter(t => t.status !== 'dibatal').forEach(t => {
-    kalender.addEvent({
-      id: t.id,
-      title: `${t.nama_bilik} \u2014 ${t.pensyarah}`,
-      start: `${t.tarikh}T${t.masa_mula}`,
-      end:   `${t.tarikh}T${t.masa_tamat}`,
-      color: warnaCal(t.status),
-      extendedProps: t
-    });
-  });
+// ══════════════════════ TINDAKAN ADMIN ══════════════════════
+function adminLulus(id) {
+  const t = appData.tempahan.find(x => x.id === id);
+  if (!t || t.status !== 'pending') return;
+  t.status = 'diluluskan';
+  simpanLS(); refreshUI();
+  tunjukAlert('&#10003; Tempahan Bilik ' + t.bilik + ' (' + t.pensyarah + ') telah diluluskan.', 'success');
 }
 
-// ── MODAL TEMPAHAN ───────────────────────────────────────────
-function populateModalDropdowns() {
-  document.getElementById('modal-bilik').innerHTML =
-    '<option value="">-- Pilih Bilik --</option>' +
-    appData.bilik.map(b => `<option value="${b.id}">${b.nama} (Kapasiti: ${b.kapasiti})</option>`).join('');
-
-  document.getElementById('modal-pensyarah').innerHTML =
-    '<option value="">-- Pilih Pensyarah --</option>' +
-    appData.pensyarah.map(p => `<option value="${p.nama}">${p.nama} \u2014 ${p.jabatan}</option>`).join('');
+function adminTolak(id) {
+  const t = appData.tempahan.find(x => x.id === id);
+  if (!t || t.status !== 'pending') return;
+  t.status = 'ditolak';
+  simpanLS(); refreshUI();
+  tunjukAlert('&#10007; Tempahan Bilik ' + t.bilik + ' (' + t.pensyarah + ') telah ditolak.', 'warning');
 }
 
-function bukModal(bilikId, tarikhStr) {
+function adminKonfirmBatal(id) {
+  const t = appData.tempahan.find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('konfirm-batal-id').value = id;
+  document.getElementById('konfirm-batal-msg').textContent =
+    'Batalkan tempahan Bilik ' + t.bilik + ' oleh ' + t.pensyarah + ' pada ' +
+    formatTarikh(t.tarikh) + ' (' + t.mula + '–' + t.tamat + ')?';
+  new bootstrap.Modal(document.getElementById('modalKonfirmBatal')).show();
+}
+
+function laksanakanBatal() {
+  const id = document.getElementById('konfirm-batal-id').value;
+  const t  = appData.tempahan.find(x => x.id === id);
+  if (!t) return;
+  t.status = 'dibatal';
+  bootstrap.Modal.getInstance(document.getElementById('modalKonfirmBatal')).hide();
+  simpanLS(); refreshUI();
+  tunjukAlert('Tempahan Bilik ' + t.bilik + ' (' + t.pensyarah + ') telah dibatalkan. Bilik kini kosong semula.', 'warning');
+}
+
+// ══════════════════════ MODAL TEMPAHAN ══════════════════════
+function bukModal(bilikId, tarikh, mula, tamat) {
   document.getElementById('form-tempah').reset();
   document.getElementById('modal-error').classList.add('d-none');
-  if (bilikId) document.getElementById('modal-bilik').value = bilikId;
-  if (tarikhStr) {
-    document.getElementById('modal-tarikh').value = tarikhStr.substring(0, 10);
-    if (tarikhStr.length > 10) document.getElementById('modal-mula').value = tarikhStr.substring(11, 16);
-  } else {
-    document.getElementById('modal-tarikh').value = document.getElementById('filter-tarikh').value || hariIni();
-    document.getElementById('modal-mula').value   = document.getElementById('filter-mula').value || '';
-    document.getElementById('modal-tamat').value  = document.getElementById('filter-tamat').value || '';
-  }
+  isiMasa('modal-mula', false);
+  isiMasa('modal-tamat', false);
+
+  // Isi dropdown bilik
+  const selBilik = document.getElementById('modal-bilik');
+  selBilik.innerHTML = '<option value="">-- Pilih Bilik --</option>' +
+    BILIK_DATA.map(b => `<option value="${b.id}" ${b.id===bilikId?'selected':''}>${b.nama} (Kapasiti: ${b.kapasiti})</option>`).join('');
+
+  // Pre-fill tarikh & masa dari filter jika ada
+  if (tarikh) document.getElementById('modal-tarikh').value = tarikh;
+  if (mula)   document.getElementById('modal-mula').value   = mula;
+  if (tamat)  document.getElementById('modal-tamat').value  = tamat;
+
   new bootstrap.Modal(document.getElementById('modalTempah')).show();
 }
 
-// ── SIMPAN TEMPAHAN ──────────────────────────────────────────
 function simpanTempahan() {
   const bilikId   = document.getElementById('modal-bilik').value;
   const pensyarah = document.getElementById('modal-pensyarah').value;
@@ -662,80 +643,202 @@ function simpanTempahan() {
   const tamat     = document.getElementById('modal-tamat').value;
   const errBox    = document.getElementById('modal-error');
 
+  // Validasi
   if (!bilikId || !pensyarah || !subjek || !kumpulan || !tarikh || !mula || !tamat) {
     errBox.textContent = 'Sila lengkapkan semua medan.';
     errBox.classList.remove('d-none'); return;
   }
-  if (mula >= tamat) {
-    errBox.textContent = 'Masa tamat mesti lebih lewat daripada masa mula.';
+  if (tarikh < '2026-06-01' || tarikh > '2026-11-30') {
+    errBox.textContent = 'Tarikh mesti dalam lingkungan Jun–Nov 2026.';
     errBox.classList.remove('d-none'); return;
   }
-  if (appData.tempahan.some(t =>
-    t.bilik_id === bilikId && t.tarikh === tarikh && t.status !== 'dibatal' &&
-    !(tamat <= t.masa_mula || mula >= t.masa_tamat))) {
-    errBox.textContent = 'Bilik ini sudah ditempah pada masa tersebut. Sila pilih masa atau bilik lain.';
+  if (mula >= tamat) {
+    errBox.textContent = 'Masa tamat mesti selepas masa mula.';
+    errBox.classList.remove('d-none'); return;
+  }
+  // Semak konflik
+  const konflik = appData.tempahan.some(t =>
+    t.bilik === bilikId && t.tarikh === tarikh &&
+    (t.status === 'pending' || t.status === 'diluluskan') &&
+    t.mula < tamat && t.tamat > mula
+  );
+  if (konflik) {
+    errBox.textContent = 'Bilik ini sudah ditempah pada masa tersebut. Pilih masa atau bilik lain.';
     errBox.classList.remove('d-none'); return;
   }
 
   errBox.classList.add('d-none');
-  const bilik = appData.bilik.find(b => b.id === bilikId);
   appData.tempahan.push({
-    id: 'T' + String(Date.now()).slice(-6),
-    bilik_id: bilikId, nama_bilik: bilik.nama,
+    id:        'T' + Date.now(),
+    bilik:     bilikId,
     pensyarah, subjek, kumpulan, tarikh,
-    masa_mula: mula, masa_tamat: tamat, status: 'pending'
+    mula, tamat,
+    status:    'pending'
   });
 
   bootstrap.Modal.getInstance(document.getElementById('modalTempah')).hide();
-  renderStatWidgets();
-  renderKadBilik(appData.bilik);
-  renderJadualTempahan(appData.tempahan);
+  simpanLS(); refreshUI();
+  tunjukAlert('&#128203; Permohonan tempahan Bilik ' + bilikId + ' telah dihantar. Status: PENDING KELULUSAN.', 'success');
+}
+
+// ══════════════════════ LOGIN ADMIN ══════════════════════
+function toggleLoginModal() {
+  if (adminLoggedIn) {
+    doLogout();
+  } else {
+    document.getElementById('login-user').value = '';
+    document.getElementById('login-pass').value = '';
+    document.getElementById('login-error').classList.add('d-none');
+    new bootstrap.Modal(document.getElementById('modalLogin')).show();
+  }
+}
+
+function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  if (u === CREDS.user && p === CREDS.pass) {
+    adminLoggedIn = true;
+    bootstrap.Modal.getInstance(document.getElementById('modalLogin')).hide();
+    // Buka kunci tab admin
+    const btn = document.getElementById('tab-admin-btn');
+    btn.classList.remove('tab-admin-locked');
+    btn.innerHTML = '&#9881;&#65039; Panel Admin';
+    // Tukar butang header
+    document.getElementById('btn-admin-toggle').innerHTML = '&#128275; Log Keluar Admin';
+    document.getElementById('btn-admin-toggle').classList.replace('btn-outline-light','btn-warning');
+    renderJadualAdmin();
+    tunjukAlert('Log masuk berjaya. Selamat datang, Admin!', 'success');
+  } else {
+    document.getElementById('login-error').classList.remove('d-none');
+  }
+}
+
+function doLogout() {
+  adminLoggedIn = false;
+  // Kunci semula tab admin & beralih ke tab pensyarah
+  const btn = document.getElementById('tab-admin-btn');
+  btn.classList.add('tab-admin-locked');
+  btn.innerHTML = '&#128274; Panel Admin';
+  document.getElementById('btn-admin-toggle').innerHTML = '&#128274; Log Masuk Admin';
+  document.getElementById('btn-admin-toggle').classList.replace('btn-warning','btn-outline-light');
+  // Pindah ke tab pensyarah
+  new bootstrap.Tab(document.getElementById('tab-pensyarah-btn')).show();
+  tunjukAlert('Anda telah log keluar.', 'info');
+}
+
+// ══════════════════════ KALENDAR ══════════════════════
+function initKalender() {
+  const el = document.getElementById('kalender');
+  kalender = new FullCalendar.Calendar(el, {
+    initialView:  'timeGridWeek',
+    initialDate:  '2026-06-01',
+    locale:       'ms',
+    validRange:   { start:'2026-06-01', end:'2026-12-01' },
+    headerToolbar:{ left:'prev,next today', center:'title', right:'dayGridMonth,timeGridWeek,listWeek' },
+    slotMinTime:  '07:00:00',
+    slotMaxTime:  '20:30:00',
+    slotDuration: '00:30:00',
+    allDaySlot:   false,
+    height:       540,
+    events:       [],
+    eventClick(info) {
+      const t = info.event.extendedProps;
+      const { label } = badgeMeta(t.status);
+      alert('Butiran Tempahan\n\n' +
+        'Bilik: ' + t.bilik + '\n' +
+        'Pensyarah: ' + t.pensyarah + '\n' +
+        'Subjek: ' + t.subjek + '\n' +
+        'Kumpulan: ' + t.kumpulan + '\n' +
+        'Tarikh: ' + formatTarikh(t.tarikh) + '\n' +
+        'Masa: ' + t.mula + ' - ' + t.tamat + '\n' +
+        'Status: ' + label.toUpperCase());
+    },
+    dateClick(info) {
+      const tarikh = info.dateStr.substring(0,10);
+      const mula   = info.dateStr.length > 10 ? info.dateStr.substring(11,16) : '';
+      bukModal('', tarikh, mula, '');
+    },
+    eventContent(arg) {
+      return { html:
+        '<div style="padding:2px 4px;overflow:hidden;line-height:1.3">' +
+        '<div style="font-weight:700">' + arg.event.extendedProps.bilik + '</div>' +
+        '<div style="font-size:0.7rem;opacity:0.9">' + arg.event.extendedProps.pensyarah + '</div>' +
+        '</div>'
+      };
+    }
+  });
+  kalender.render();
+}
+
+function kemaskiniKalender() {
+  if (!kalender) return;
+  kalender.getEvents().forEach(e => e.remove());
+  appData.tempahan
+    .filter(t => t.status === 'pending' || t.status === 'diluluskan')
+    .forEach(t => {
+      const opacity = t.status === 'pending' ? '99' : 'ff';
+      const warna   = (BILIK_WARNA[t.bilik] || '#6b7280') + opacity;
+      kalender.addEvent({
+        id:    t.id,
+        title: t.bilik + ' - ' + t.pensyarah,
+        start: t.tarikh + 'T' + t.mula,
+        end:   t.tarikh + 'T' + t.tamat,
+        backgroundColor: warna,
+        borderColor:     BILIK_WARNA[t.bilik] || '#6b7280',
+        extendedProps:   t
+      });
+    });
+}
+
+// ══════════════════════ REFRESH SEMUA UI ══════════════════════
+function refreshUI() {
+  const tarikh = document.getElementById('filter-tarikh').value;
+  const mula   = document.getElementById('filter-mula').value;
+  const tamat  = document.getElementById('filter-tamat').value;
+  renderStat();
+  renderKadBilik(tarikh, mula, tamat);
+  renderJadualTempahan();
   kemaskiniKalender();
-  tunjukAlert('Permohonan tempahan berjaya dihantar! Status: PENDING KELULUSAN.', 'success');
+  if (adminLoggedIn) renderJadualAdmin();
 }
 
-// ── BATAL TEMPAHAN ───────────────────────────────────────────
-function konfirmBatal(id) {
-  document.getElementById('batal-id').value = id;
-  new bootstrap.Modal(document.getElementById('modalBatal')).show();
+// ══════════════════════ UTILITIES ══════════════════════
+function badgeMeta(status) {
+  return {
+    kosong:     { cls:'badge-kosong',     label:'Kosong'           },
+    pending:    { cls:'badge-pending',    label:'Pending'          },
+    diluluskan: { cls:'badge-diluluskan', label:'Diluluskan'       },
+    ditempah:   { cls:'badge-ditempah',   label:'Ditempah'         },
+    ditolak:    { cls:'badge-ditolak',    label:'Ditolak'          },
+    dibatal:    { cls:'badge-dibatal',    label:'Dibatal'          }
+  }[status] || { cls:'', label: status };
 }
 
-function batalTempahan() {
-  const id  = document.getElementById('batal-id').value;
-  const idx = appData.tempahan.findIndex(t => t.id === id);
-  if (idx !== -1) appData.tempahan[idx].status = 'dibatal';
-  bootstrap.Modal.getInstance(document.getElementById('modalBatal')).hide();
-  renderStatWidgets();
-  renderKadBilik(appData.bilik);
-  renderJadualTempahan(appData.tempahan);
-  kemaskiniKalender();
-  tunjukAlert('Tempahan telah dibatalkan.', 'warning');
-}
-
-// ── UTILITIES ────────────────────────────────────────────────
-function badgeStatus(status) {
-  return { kosong:{cls:'badge-kosong',label:'Kosong'}, ditempah:{cls:'badge-ditempah',label:'Ditempah'},
-    pending:{cls:'badge-pending',label:'Pending'}, diluluskan:{cls:'badge-diluluskan',label:'Diluluskan'},
-    dibatal:{cls:'badge-ditempah',label:'Dibatal'} }[status] || { cls:'', label:status };
-}
-function warnaCal(status) {
-  return { diluluskan:'#2563eb', pending:'#ca8a04', dibatal:'#9ca3af' }[status] || '#6b7280';
-}
-function hariIni() { return new Date().toISOString().split('T')[0]; }
 function formatTarikh(str) {
   if (!str) return '';
-  const [y,m,d] = str.split('-'); return `${d}/${m}/${y}`;
-}
-function tunjukAlert(msg, jenis) {
-  const box = document.getElementById('alert-box');
-  box.className = `alert alert-${jenis} alert-dismissible fade show shadow`;
-  document.getElementById('alert-msg').textContent = msg;
-  box.style.display = 'block';
-  setTimeout(() => { box.style.display = 'none'; }, 4000);
+  const [y,m,d] = str.split('-');
+  return d + '/' + m + '/' + y;
 }
 
-// ── MULAKAN ──────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', init);
+function tunjukAlert(msg, jenis) {
+  const box = document.getElementById('alert-box');
+  box.className = 'alert alert-' + jenis + ' alert-dismissible fade show shadow';
+  document.getElementById('alert-msg').innerHTML = msg;
+  box.style.display = 'block';
+  clearTimeout(box._timer);
+  box._timer = setTimeout(() => { box.style.display = 'none'; }, 5000);
+}
+
+// ══════════════════════ BOOT ══════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+  muatLS();
+  isiMasa('filter-mula', true);
+  isiMasa('filter-tamat', true);
+  isiMasa('modal-mula', false);
+  isiMasa('modal-tamat', false);
+  initKalender();
+  refreshUI();
+});
 </script>
 </body>
 </html>
