@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SisTempah — Sistem Tempahan Bilik Kelas Ganti</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <!-- FullCalendar -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/main.min.css" rel="stylesheet" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<nav class="navbar-sistempah d-flex align-items-center justify-content-between">
+  <div>
+    <div class="brand-title"><i class="bi bi-building me-2"></i>SisTempah</div>
+    <div class="brand-subtitle">Sistem Tempahan Bilik Kelas Ganti</div>
+  </div>
+  <div class="d-flex align-items-center gap-2">
+    <span class="badge bg-light text-primary fw-semibold" style="font-size:0.75rem;">Semester Jun–Nov 2026</span>
+    <span class="user-badge"><i class="bi bi-person-circle me-1"></i>Pensyarah A</span>
+  </div>
+</nav>
+
+<!-- ===================== MAIN CONTAINER ===================== -->
+<div class="container-fluid px-3 px-md-4 py-4">
+
+  <!-- ALERT BOX -->
+  <div id="alert-box" class="alert alert-success alert-dismissible fade show shadow" role="alert">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    <span id="alert-msg">Tempahan berjaya dihantar!</span>
+    <button type="button" class="btn-close" onclick="document.getElementById('alert-box').style.display='none'"></button>
+  </div>
+
+  <!-- ===== STAT WIDGETS ===== -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="bi bi-door-open"></i></div>
+        <div>
+          <div class="stat-value" id="stat-kosong">0</div>
+          <div class="stat-label">Bilik Kosong</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon red"><i class="bi bi-door-closed"></i></div>
+        <div>
+          <div class="stat-value" id="stat-ditempah">0</div>
+          <div class="stat-label">Bilik Ditempah</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon yellow"><i class="bi bi-hourglass-split"></i></div>
+        <div>
+          <div class="stat-value" id="stat-pending">0</div>
+          <div class="stat-label">Pending Kelulusan</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon blue"><i class="bi bi-calendar-check"></i></div>
+        <div>
+          <div class="stat-value" id="stat-jumlah">0</div>
+          <div class="stat-label">Jumlah Tempahan</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FILTER PANEL ===== -->
+  <div class="filter-panel mb-4">
+    <div class="section-title mb-3"><i class="bi bi-funnel me-2"></i>Cari Bilik Available</div>
+    <div class="row g-3 align-items-end">
+      <div class="col-6 col-md-2">
+        <label class="form-label">Tarikh</label>
+        <input type="date" id="filter-tarikh" class="form-control form-control-sm" />
+      </div>
+      <div class="col-6 col-md-2">
+        <label class="form-label">Masa Mula</label>
+        <input type="time" id="filter-mula" class="form-control form-control-sm" />
+      </div>
+      <div class="col-6 col-md-2">
+        <label class="form-label">Masa Tamat</label>
+        <input type="time" id="filter-tamat" class="form-control form-control-sm" />
+      </div>
+      <div class="col-6 col-md-2">
+        <label class="form-label">Min. Kapasiti</label>
+        <select id="filter-kapasiti" class="form-select form-select-sm">
+          <option value="0">Semua Kapasiti</option>
+          <option value="10">10+</option>
+          <option value="20">20+</option>
+          <option value="30">30+</option>
+          <option value="40">40+</option>
+        </select>
+      </div>
+      <div class="col-6 col-md-2">
+        <label class="form-label">Kemudahan</label>
+        <select id="filter-kemudahan" class="form-select form-select-sm">
+          <option value="">Semua</option>
+          <option value="Projektor">Projektor</option>
+          <option value="AC">AC</option>
+          <option value="WiFi">WiFi</option>
+          <option value="Papan Putih">Papan Putih</option>
+        </select>
+      </div>
+      <div class="col-6 col-md-2 d-flex gap-2">
+        <button class="btn-cari w-100" onclick="filterBilik()"><i class="bi bi-search me-1"></i>Cari</button>
+        <button class="btn-reset" onclick="resetFilter()" title="Reset"><i class="bi bi-x-lg"></i></button>
+      </div>
+    </div>
+    <div id="filter-result-msg" class="mt-2 text-muted" style="font-size:0.8rem;"></div>
+  </div>
+
+  <!-- ===== KAD BILIK ===== -->
+  <div class="section-title"><i class="bi bi-grid-3x3-gap me-2"></i>Status Bilik</div>
+  <div class="row g-3 mb-4" id="senarai-bilik">
+    <!-- Dijana oleh JavaScript -->
+  </div>
+
+  <!-- ===== CALENDAR ===== -->
+  <div class="section-title"><i class="bi bi-calendar-week me-2"></i>Jadual Tempahan Mingguan</div>
+  <div id="kalender" class="mb-4"></div>
+
+  <!-- ===== JADUAL TEMPAHAN SAYA ===== -->
+  <div class="section-title"><i class="bi bi-list-check me-2"></i>Senarai Semua Tempahan</div>
+  <div class="jadual-wrapper mb-4">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0" id="jadual-tempahan">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Bilik</th>
+            <th>Pensyarah</th>
+            <th>Subjek</th>
+            <th>Kumpulan</th>
+            <th>Tarikh</th>
+            <th>Masa</th>
+            <th>Status</th>
+            <th>Tindakan</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-tempahan">
+          <!-- Dijana oleh JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ===================== FOOTER ===================== -->
+<div class="footer-bar">
+  SisTempah &copy; 2026 — Sistem Tempahan Bilik Kelas Ganti &nbsp;|&nbsp; Made with IBM Bob
+</div>
+
+<!-- ===================== MODAL TEMPAHAN ===================== -->
+<div class="modal fade" id="modalTempah" tabindex="-1" aria-labelledby="modalTempahLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTempahLabel"><i class="bi bi-calendar-plus me-2"></i>Borang Tempahan Bilik</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body">
+        <form id="form-tempah" novalidate>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Bilik</label>
+            <select id="modal-bilik" class="form-select" required>
+              <option value="">-- Pilih Bilik --</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Pensyarah</label>
+            <select id="modal-pensyarah" class="form-select" required>
+              <option value="">-- Pilih Pensyarah --</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Subjek / Mata Pelajaran</label>
+            <input type="text" id="modal-subjek" class="form-control" placeholder="cth: Matematik Kejuruteraan" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Kumpulan Pelajar</label>
+            <input type="text" id="modal-kumpulan" class="form-control" placeholder="cth: 3EE1" required />
+          </div>
+          <div class="row g-2">
+            <div class="col-12">
+              <label class="form-label fw-semibold">Tarikh</label>
+              <input type="date" id="modal-tarikh" class="form-control" required />
+            </div>
+          </div>
+          <div class="row g-2 mt-1">
+            <div class="col-6">
+              <label class="form-label fw-semibold">Masa Mula</label>
+              <input type="time" id="modal-mula" class="form-control" required />
+            </div>
+            <div class="col-6">
+              <label class="form-label fw-semibold">Masa Tamat</label>
+              <input type="time" id="modal-tamat" class="form-control" required />
+            </div>
+          </div>
+          <div id="modal-error" class="alert alert-danger mt-3 d-none" role="alert"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-success fw-semibold" onclick="simpanTempahan()">
+          <i class="bi bi-send me-1"></i>Hantar Permohonan
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL BATAL ===================== -->
+<div class="modal fade" id="modalBatal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#dc2626;">
+        <h6 class="modal-title text-white fw-bold"><i class="bi bi-trash me-2"></i>Batal Tempahan</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter:invert(1)"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-0">Adakah anda pasti ingin membatalkan tempahan ini?</p>
+        <input type="hidden" id="batal-id" />
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Tidak</button>
+        <button class="btn btn-sm btn-danger fw-semibold" onclick="batalTempahan()">Ya, Batal</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SCRIPTS ===================== -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
